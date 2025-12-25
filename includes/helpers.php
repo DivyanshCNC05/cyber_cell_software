@@ -12,7 +12,21 @@ function flash_get($key) {
 }
 
 function redirect($url) {
-    header('Location: ' . $url);
+    // Build location using BASE_PATH when appropriate
+    // If absolute URL is provided, use it as-is
+    if (stripos($url, 'http://') === 0 || stripos($url, 'https://') === 0) {
+        $loc = $url;
+    } else {
+        // Ensure BASE_PATH is usable (defaults to '/')
+        $base = rtrim(BASE_PATH, '/');
+        if (substr($url, 0, 1) === '/') {
+            // $url like '/dashboard.php' -> join with base
+            $loc = ($base === '' ? '' : $base) . $url;
+        } else {
+            $loc = ($base === '' ? '/' : $base . '/') . $url;
+        }
+    }
+    header('Location: ' . $loc);
     exit;
 }
 

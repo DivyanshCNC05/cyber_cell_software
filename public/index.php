@@ -5,19 +5,18 @@ require_once __DIR__ . '/../includes/auth.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_check($_POST['csrf_token'] ?? '')) {
         flash_set('error', 'Invalid CSRF token');
-        header('Location: /index.php'); exit;
+        redirect('/index.php');
     }
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     if (login($email, $password)) {
         $user = current_user();
         switch ($user['role'] ?? '') {
-            case 'ADMIN': header('Location: /dashboard.php'); break;
-            case 'CEIR_USER': header('Location: /dashboard.php'); break;
-            case 'CYBER_USER': header('Location: /dashboard.php'); break;
-            default: header('Location: /index.php'); break;
+            case 'ADMIN': redirect('/dashboard.php'); break;
+            case 'CEIR_USER': redirect('/dashboard.php'); break;
+            case 'CYBER_USER': redirect('/dashboard.php'); break;
+            default: redirect('/index.php'); break;
         }
-        exit;
     } else {
         flash_set('error', 'Invalid credentials');
     }
