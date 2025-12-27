@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id']
     ]);
     flash_set('success', 'CEIR form saved');
-    redirect('/dashboard.php');
+    redirect('/ceir_dashboard.php');
 }
 redirect('/ceir_form.php');
 ?>

@@ -34,12 +34,23 @@ function login($email, $password) {
     $stmt = $pdo->prepare('SELECT * FROM login_credentials WHERE email = ?');
     $stmt->execute([$email]);
     $user = $stmt->fetch();
-    if ($user && password_verify($password, $user['password_hash'])) {
-        session_regenerate_id(true);
-        $_SESSION['user_id'] = $user['user_id'];
-        // record login if activity_logs exists
-        log_activity($user['user_id'], 'login', 'Successful login');
-        return true;
+    // Check user exists
+    if ($user) {
+        // Check active flag
+        if (isset($user['is_active']) && !$user['is_active']) {
+            flash_set('error', 'Account is inactive. Contact administrator.');
+            return false;
+        }
+        if (password_verify($password, $user['password_hash'])) {
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = $user['user_id'];
+            // store a couple of convenience values in session
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['full_name'] = $user['full_name'];
+            // record login if activity_logs exists
+            log_activity($user['user_id'], 'login', 'Successful login');
+            return true;
+        }
     }
     return false;
 }
@@ -51,5 +62,18 @@ function logout() {
     }
     session_unset();
     session_destroy();
+}
+
+// Role helpers
+function has_role($role) {
+    if (!empty($_SESSION['role'])) return $_SESSION['role'] === $role;
+    $u = current_user();
+    return ($u && isset($u['role']) && $u['role'] === $role);
+}
+function is_admin() {
+    return has_role('ADMIN');
+}
+function require_admin() {
+    require_role(['ADMIN']);
 }
 ?>

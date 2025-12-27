@@ -42,7 +42,7 @@ Be aware the role names are **case-sensitive** and match the schema values:
 - `cybercell/includes/db.php` — PDO connection
 - `cybercell/includes/auth.php` — login/session helpers
 - `cybercell/includes/helpers.php` — flash, CSRF, sanitize, logging
-- `cybercell/includes/reports.php` — report helpers
+- `cybercell/includes/tables.php` — report helpers (detailed per-thana and CEIR)
 - `cybercell/public/` — login, dashboard, forms, reports, logout
 - `cybercell/public/assets/` — `css/` and `js/` (basic styling)
 - `cybercell/uploads/` — `ceir_forms/`, `cyber_attachments/`
