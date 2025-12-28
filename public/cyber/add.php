@@ -29,13 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $table = $CYBER_TABLES[$selected_thana]; // whitelisted table name
 
+    $complaint_date = p('complaint_date');
+
     $data = [
-      ':complaint_number'       => p('complaint_number'),
       ':applicant_name'         => p('applicant_name'),
       ':acknowledgement_number' => p('acknowledgement_number'),
       ':nature_of_fraud'        => p('nature_of_fraud'),
       ':incident_date'          => p('incident_date') ?: null,
-      ':complaint_date'         => p('complaint_date'),
+      ':complaint_date'         => $complaint_date,
       ':total_fraud'            => p('total_fraud') !== '' ? p('total_fraud') : 0,
       ':hold_date'              => p('hold_date') ?: null,
       ':hold_amount'            => p('hold_amount') !== '' ? p('hold_amount') : 0,
@@ -55,6 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $error = 'Applicant name is required.';
     } else {
 
+      // Determine month window from complaint_date
+      $ts = strtotime($complaint_date);
+      $monthStart = date('Y-m-01', $ts);
+      $monthEnd   = date('Y-m-t', $ts);
+      $monthCode  = strtoupper(date('M', $ts)); // JAN/FEB... [web:725]
+
+      // Serial for this table in this month
+      $c = $pdo->prepare("SELECT COUNT(*) FROM {$table} WHERE complaint_date BETWEEN :ms AND :me");
+      $c->execute([':ms' => $monthStart, ':me' => $monthEnd]);
+      $serial = ((int)$c->fetchColumn()) + 1;
+
+      $prefix = strtoupper($selected_thana);
+      $serial2 = str_pad((string)$serial, 2, '0', STR_PAD_LEFT); // 01, 02... [web:714]
+      $complaintNo = $prefix . '-' . $monthCode . '-' . $serial2;
+
+      // 1) Insert including generated complaint_number
       $sql = "INSERT INTO {$table}
         (complaint_number, applicant_name, acknowledgement_number, nature_of_fraud,
          incident_date, complaint_date, total_fraud, hold_date, hold_amount,
@@ -67,9 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          :digital_arrest, :digital_amount, :mobile_number, :created_by)";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->execute($data);
+      $stmt->execute([':complaint_number' => $complaintNo] + $data);
 
-      $success = "Saved successfully in {$table}. Record ID: " . $pdo->lastInsertId();
+      $success = "Saved successfully in {$table}. Complaint No: {$complaintNo}";
       $_POST = [];
       $selected_thana = '';
     }
@@ -117,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="col-md-4">
       <label class="form-label">Complaint Number</label>
-      <input class="form-control" name="complaint_number" value="<?= htmlspecialchars($_POST['complaint_number'] ?? '') ?>">
+      <input class="form-control" value="Auto generated" disabled>
     </div>
 
     <div class="col-md-4">
@@ -202,7 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <button class="btn btn-primary" type="submit">Save</button>
       <a class="btn btn-secondary" href="<?= BASE_PATH ?>/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Cancel</a>
     </div>
-
   </form>
 </div>
 </body>
