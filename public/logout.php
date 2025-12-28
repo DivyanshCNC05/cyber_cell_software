@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/auth.php';
-logout();
-redirect('/index.php');
-?>
+session_start();
+$_SESSION = [];
+session_destroy();
+header('Location: /index.php');
+exit;
