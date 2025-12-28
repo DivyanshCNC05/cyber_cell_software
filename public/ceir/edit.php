@@ -1,9 +1,14 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/ceir_thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/ceir_thanas.php';
 
-require_role('CEIR_USER');
+// Allow ADMIN to access CEIR pages
+if (($_SESSION['role'] ?? '') === 'ADMIN') {
+  // admin allowed
+} else {
+  require_role('CEIR_USER');
+}
 
 function p($k, $d='') { return trim($_POST[$k] ?? $d); }
 
@@ -120,8 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':id' => $ceir_id,
       ]);
 
-      header('Location: /ceir/list.php?thana=' . urlencode($thana) . '&updated=1');
-      exit;
+      $q = 'thana=' . urlencode($thana) . '&updated=1';
+      header('Location: ' . BASE_PATH . '/ceir/list.php?' . $q);
+      exit; 
     }
   }
 
@@ -151,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Edit CEIR - ID <?= (int)$ceir_id ?></h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/ceir/list.php?thana=<?= urlencode($thana) ?>">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/ceir/list.php?thana=<?= urlencode($thana) ?>">Back</a>
   </div>
 
   <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
@@ -160,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="card-body">
       <?php if (!empty($row['pdf_attach'])): ?>
         <a class="btn btn-sm btn-info" target="_blank"
-           href="/ceir/view_pdf.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$ceir_id ?>">
+           href="<?= BASE_PATH ?>/ceir/view_pdf.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$ceir_id ?>">
           View current PDF
         </a>
       <?php else: ?>
@@ -229,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Update</button>
-      <a class="btn btn-secondary" href="/ceir/list.php?thana=<?= urlencode($thana) ?>">Cancel</a>
+      <a class="btn btn-secondary" href="<?= BASE_PATH ?>/ceir/list.php?thana=<?= urlencode($thana) ?>">Cancel</a>
     </div>
   </form>
 

@@ -35,15 +35,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_number'] = $user['user_number']; // 1/2/3 for CYBER_USER
 
             if ($user['role'] === 'ADMIN') {
-                header('Location: ./dashboards/admin.php'); exit;
+                $dest = BASE_PATH . '/dashboards/admin.php';
+                error_log('DEBUG: redirecting to ' . $dest);
+                header('Location: ' . $dest); exit;
             }
             if ($user['role'] === 'CEIR_USER') {
-                header('Location: ./dashboards/ceir.php'); exit;
+                $dest = BASE_PATH . '/dashboards/ceir.php';
+                error_log('DEBUG: redirecting to ' . $dest);
+                header('Location: ' . $dest); exit;
             }
             if ($user['role'] === 'CYBER_USER') {
-                if ((int)$user['user_number'] === 1) { header('Location: ./dashboards/user1.php'); exit; }
-                if ((int)$user['user_number'] === 2) { header('Location: ./dashboards/user2.php'); exit; }
-                if ((int)$user['user_number'] === 3) { header('Location: ./dashboards/user3.php'); exit; }
+                if ((int)$user['user_number'] === 1) { $dest = BASE_PATH . '/dashboards/user1.php'; error_log('DEBUG: redirecting to ' . $dest); header('Location: ' . $dest); exit; }
+                if ((int)$user['user_number'] === 2) { $dest = BASE_PATH . '/dashboards/user2.php'; error_log('DEBUG: redirecting to ' . $dest); header('Location: ' . $dest); exit; }
+                if ((int)$user['user_number'] === 3) { $dest = BASE_PATH . '/dashboards/user3.php'; error_log('DEBUG: redirecting to ' . $dest); header('Location: ' . $dest); exit; }
                 $error = 'CYBER_USER must have user_number 1,2,3';
             } else {
                 $error = 'Invalid role';

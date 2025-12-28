@@ -1,12 +1,21 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/ceir_thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/ceir_thanas.php';
 
-require_role('CEIR_USER');
+// Allow ADMIN to access CEIR pages
+if (($_SESSION['role'] ?? '') === 'ADMIN') {
+  // admin allowed
+} else {
+  require_role('CEIR_USER');
+}
 
 $from = $_GET['from'] ?? '';
 $to   = $_GET['to'] ?? '';
+
+// debug: log generate requests
+error_log('DEBUG: ceir/report.php called - from=' . $from . ' to=' . $to . ' REQUEST_URI=' . ($_SERVER['REQUEST_URI'] ?? ''));
+echo '<!-- DEBUG: ceir_report: from=' . htmlspecialchars($from) . ' to=' . htmlspecialchars($to) . ' REQUEST_URI=' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '') . ' -->';
 
 $rows = [];
 $grand = [
@@ -81,7 +90,7 @@ if ($from !== '' && $to !== '') {
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">CEIR Report (Thana-wise)</h3>
     <div class="no-print">
-      <a class="btn btn-outline-secondary btn-sm" href="/dashboards/ceir.php">Back</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/ceir.php">Back</a>
       <?php if ($from && $to): ?>
         <button class="btn btn-dark btn-sm" onclick="window.print()">Print</button>
       <?php endif; ?>

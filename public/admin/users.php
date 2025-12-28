@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . 'access.php';
-require __DIR__ . '../../includes/db.php';
+require __DIR__ . '/access.php';
+require __DIR__ . '/../../includes/db.php';
 
 $msg = '';
 $err = '';
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || $role === '' || $pass === '') {
       $err = 'Email, role, password are required.';
     } else {
-      $hash = password_hash($pass, PASSWORD_DEFAULT); [web:236]
+      $hash = password_hash($pass, PASSWORD_DEFAULT); // [web:236]
       $stmt = $pdo->prepare("INSERT INTO login_credentials
         (email, password_hash, password_hash_new, role, full_name, is_active, user_number)
         VALUES (:email, '', :hash_new, :role, :full_name, 1, :user_number)");
@@ -75,7 +75,7 @@ $users = $pdo->query("SELECT user_id, email, role, full_name, is_active, user_nu
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">User Management</h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/dashboards/admin.php">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/admin.php">Back</a>
   </div>
 
   <?php if ($err): ?><div class="alert alert-danger"><?= htmlspecialchars($err) ?></div><?php endif; ?>

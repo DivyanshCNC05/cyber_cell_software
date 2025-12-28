@@ -1,9 +1,15 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/thanas.php';
 
-require_role('CYBER_USER');
+// Allow ADMIN to act as a specific user when as_user is provided
+if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
+  $acting_user = (int)($_REQUEST['as_user']);
+} else {
+  require_role('CYBER_USER');
+  $acting_user = (int)($_SESSION['user_number'] ?? 0);
+}
 
 $allowed = cyber_allowed_thanas_for_logged_user();
 if (!$allowed) {
@@ -62,8 +68,8 @@ $rows = $stmt->fetchAll(); // returns array of rows [web:317]
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Cyber Complaints - <?= htmlspecialchars(cyber_thana_label($thana)) ?></h3>
     <div>
-      <a class="btn btn-primary btn-sm" href="/cyber/add.php">Add New</a>
-      <a class="btn btn-outline-secondary btn-sm" href="/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Back</a>
+      <a class="btn btn-primary btn-sm" href="<?= BASE_PATH ?>/cyber/add.php">Add New</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Back</a>
     </div>
   </div>
 
@@ -130,9 +136,9 @@ $rows = $stmt->fetchAll(); // returns array of rows [web:317]
             <td><?= htmlspecialchars($r['block_or_unblock'] ?? '') ?></td>
             <td>
               <a class="btn btn-sm btn-warning"
-                 href="/cyber/edit.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>">Edit</a>
+                 href="<?= BASE_PATH ?>/cyber/edit.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>&as_user=<?= $acting_user ?>">Edit</a>
               <a class="btn btn-sm btn-danger"
-                 href="/cyber/delete.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>">Delete</a>
+                 href="<?= BASE_PATH ?>/cyber/delete.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>&as_user=<?= $acting_user ?>">Delete</a>
             </td>
           </tr>
         <?php endforeach; ?>

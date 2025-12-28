@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/thanas.php';
-require __DIR__ . 'access.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/thanas.php';
+require __DIR__ . '/access.php';
 
 require_role('ADMIN');
 
@@ -74,7 +74,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Admin Cyber Report (All Thanas)</h3>
     <div class="no-print">
-      <a class="btn btn-outline-secondary btn-sm" href="/dashboards/admin.php">Back</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/admin.php">Back</a>
       <?php if ($from && $to): ?>
         <button class="btn btn-dark btn-sm" onclick="window.print()">Print</button>
       <?php endif; ?>

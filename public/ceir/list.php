@@ -1,9 +1,14 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/ceir_thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/ceir_thanas.php';
 
-require_role('CEIR_USER');
+// Allow ADMIN to access CEIR pages
+if (($_SESSION['role'] ?? '') === 'ADMIN') {
+  // admin allowed
+} else {
+  require_role('CEIR_USER');
+}
 
 $allThanas = array_keys($CEIR_TABLES);
 
@@ -56,8 +61,8 @@ $rows = $stmt->fetchAll();
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">CEIR List</h3>
     <div>
-      <a class="btn btn-primary btn-sm" href="/ceir/add.php">Add CEIR</a>
-      <a class="btn btn-outline-secondary btn-sm" href="/dashboards/ceir.php">Back</a>
+      <a class="btn btn-primary btn-sm" href="<?= BASE_PATH ?>/ceir/add.php">Add CEIR</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/ceir.php">Back</a> 
     </div>
   </div>
 
@@ -131,7 +136,7 @@ $rows = $stmt->fetchAll();
               <?php if (!empty($r['pdf_attach'])): ?>
                 <a class="btn btn-sm btn-info"
                    target="_blank"
-                   href="/ceir/view_pdf.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">
+                   href="<?= BASE_PATH ?>/ceir/view_pdf.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">
                    View PDF
                 </a>
               <?php else: ?>
@@ -140,9 +145,9 @@ $rows = $stmt->fetchAll();
             </td>
             <td>
               <a class="btn btn-sm btn-warning"
-                 href="/ceir/edit.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">Edit</a>
+                 href="<?= BASE_PATH ?>/ceir/edit.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">Edit</a>
               <a class="btn btn-sm btn-danger"
-                 href="/ceir/delete.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">Delete</a>
+                 href="<?= BASE_PATH ?>/ceir/delete.php?thana=<?= urlencode($thana) ?>&ceir_id=<?= (int)$r['ceir_id'] ?>">Delete</a>
             </td>
           </tr>
         <?php endforeach; ?>

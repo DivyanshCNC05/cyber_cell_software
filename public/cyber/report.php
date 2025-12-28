@@ -1,15 +1,25 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/thanas.php';
 
-require_role('CYBER_USER');
+// Allow ADMIN to act as a user if as_user is provided
+if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
+  $acting_user = (int)($_REQUEST['as_user']);
+} else {
+  require_role('CYBER_USER');
+  $acting_user = (int)($_SESSION['user_number'] ?? 0);
+}
 
 $allowed = cyber_allowed_thanas_for_logged_user();
 if (!$allowed) die('No thanas assigned.');
 
 $from = $_GET['from'] ?? '';
 $to   = $_GET['to'] ?? '';
+
+// debug: log generate requests
+error_log('DEBUG: cyber/report.php called - from=' . $from . ' to=' . $to . ' acting_user=' . ($acting_user ?? '') . ' REQUEST_URI=' . ($_SERVER['REQUEST_URI'] ?? ''));
+echo '<!-- DEBUG: cyber_report: from=' . htmlspecialchars($from) . ' to=' . htmlspecialchars($to) . ' acting_user=' . htmlspecialchars($acting_user ?? '') . ' REQUEST_URI=' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '') . ' -->';
 
 $rows = [];
 $grand = [
@@ -86,7 +96,7 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Cyber Report (Thana-wise)</h3>
     <div class="no-print">
-      <a class="btn btn-outline-secondary btn-sm" href="/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Back</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/user<?= $acting_user ?>.php">Back</a>
       <?php if ($from && $to): ?>
         <button class="btn btn-dark btn-sm" onclick="window.print()">Print</button>
       <?php endif; ?>
@@ -94,6 +104,7 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
   </div>
 
   <form class="row g-2 mb-3 no-print" method="get">
+    <input type="hidden" name="as_user" value="<?= $acting_user ?>">
     <div class="col-md-3">
       <label class="form-label">From</label>
       <input type="date" class="form-control" name="from" value="<?= htmlspecialchars($from) ?>" required>

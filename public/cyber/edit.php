@@ -1,9 +1,15 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/thanas.php';
 
-require_role('CYBER_USER');
+// Allow ADMIN to act as a user if as_user is provided
+if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
+  $acting_user = (int)($_REQUEST['as_user']);
+} else {
+  require_role('CYBER_USER');
+  $acting_user = (int)($_SESSION['user_number'] ?? 0);
+}
 
 $allowed = cyber_allowed_thanas_for_logged_user();
 if (!$allowed) die('No thanas assigned.');
@@ -82,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute($data);
 
         // Redirect back to list (prevents resubmit on refresh)
-        header('Location: /cyber/list.php?thana=' . urlencode($thana) . '&updated=1');
+        $q = 'thana=' . urlencode($thana) . '&updated=1';
+        if (isset($acting_user) && $acting_user) { $q .= '&as_user=' . $acting_user; }
+        header('Location: ' . BASE_PATH . '/cyber/list.php?' . $q);
         exit;
     }
 }
@@ -121,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Edit Complaint (<?= htmlspecialchars(cyber_thana_label($thana)) ?>) - S.No <?= (int)$sno ?></h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/cyber/list.php?thana=<?= urlencode($thana) ?>">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= isset($acting_user) && $acting_user ? '&as_user=' . $acting_user : '' ?>">Back</a>
   </div>
 
   <?php if ($error): ?>
@@ -129,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
   <?php endif; ?>
 
   <form method="post" class="row g-3">
+    <input type="hidden" name="as_user" value="<?= htmlspecialchars($acting_user) ?>">
     <div class="col-md-4">
       <label class="form-label">Complaint Number</label>
       <input class="form-control" name="complaint_number" value="<?= htmlspecialchars($row['complaint_number'] ?? '') ?>">
@@ -214,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
 
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Update</button>
-      <a class="btn btn-secondary" href="/cyber/list.php?thana=<?= urlencode($thana) ?>">Cancel</a>
+      <a class="btn btn-secondary" href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= isset($acting_user) && $acting_user ? '&as_user=' . $acting_user : '' ?>">Cancel</a>
     </div>
   </form>
 </div>

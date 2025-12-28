@@ -1,9 +1,15 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/thanas.php';
 
-require_role('CYBER_USER');
+// If ADMIN is acting as another user, allow access and set $acting_user, otherwise require CYBER_USER
+if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
+  $acting_user = (int)($_REQUEST['as_user']);
+} else {
+  require_role('CYBER_USER');
+  $acting_user = (int)($_SESSION['user_number'] ?? 0);
+}
 
 $allowed = cyber_allowed_thanas_for_logged_user();
 $error = '';
@@ -82,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Add Cyber Complaint</h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/user<?= $acting_user ?>.php">Back</a>
   </div>
 
   <?php if (!$allowed): ?>
@@ -95,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
 
   <form method="post" class="row g-3">
+    <input type="hidden" name="as_user" value="<?= htmlspecialchars($acting_user) ?>">
 
     <div class="col-md-4">
       <label class="form-label">Thana</label>
@@ -193,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Save</button>
-      <a class="btn btn-secondary" href="/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Cancel</a>
+      <a class="btn btn-secondary" href="<?= BASE_PATH ?>/dashboards/user<?= (int)($_SESSION['user_number'] ?? 1) ?>.php">Cancel</a>
     </div>
 
   </form>

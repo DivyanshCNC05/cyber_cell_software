@@ -1,12 +1,17 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/ceir_thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/ceir_thanas.php';
 
-require_role('CEIR_USER');
+// Allow ADMIN to access CEIR pages
+if (($_SESSION['role'] ?? '') === 'ADMIN') {
+  // admin allowed
+} else {
+  require_role('CEIR_USER');
+}
 
 $error = '';
-$success = '';
+$success = ''; 
 
 function p($k, $d='') { return trim($_POST[$k] ?? $d); }
 
@@ -127,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Add CEIR Form</h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/dashboards/ceir.php">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/ceir.php">Back</a>
   </div>
 
   <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
@@ -203,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Save CEIR</button>
-      <a class="btn btn-secondary" href="/dashboards/ceir.php">Cancel</a>
+      <a class="btn btn-secondary" href="<?= BASE_PATH ?>/dashboards/ceir.php">Cancel</a>
     </div>
 
   </form>

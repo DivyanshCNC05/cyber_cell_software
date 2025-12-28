@@ -1,9 +1,14 @@
 <?php
-require __DIR__ . '../../includes/db.php';
-require __DIR__ . '../../includes/auth.php';
-require __DIR__ . '../../includes/ceir_thanas.php';
+require __DIR__ . '/../../includes/db.php';
+require __DIR__ . '/../../includes/auth.php';
+require __DIR__ . '/../../includes/ceir_thanas.php';
 
-require_role('CEIR_USER');
+// Allow ADMIN to access CEIR pages
+if (($_SESSION['role'] ?? '') === 'ADMIN') {
+  // admin allowed
+} else {
+  require_role('CEIR_USER');
+}
 
 $thana   = $_GET['thana'] ?? ($_POST['thana'] ?? '');
 $ceir_id = isset($_GET['ceir_id']) ? (int)$_GET['ceir_id'] : (isset($_POST['ceir_id']) ? (int)$_POST['ceir_id'] : 0);
@@ -47,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->execute([':id' => $ceir_id]); // prepared delete pattern [web:340]
 
   // PRG redirect (prevents double submit)
-  header('Location: /ceir/list.php?thana=' . urlencode($thana) . '&deleted=1');
-  exit;
+  $q = 'thana=' . urlencode($thana) . '&deleted=1';
+  header('Location: ' . BASE_PATH . '/ceir/list.php?' . $q);
+  exit; 
 }
 ?>
 <!doctype html>
@@ -64,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Delete CEIR</h3>
-    <a class="btn btn-outline-secondary btn-sm" href="/ceir/list.php?thana=<?= urlencode($thana) ?>">Back</a>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/ceir/list.php?thana=<?= urlencode($thana) ?>">Back</a>
   </div>
 
   <div class="alert alert-warning">
@@ -85,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="hidden" name="ceir_id" value="<?= (int)$row['ceir_id'] ?>">
 
     <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a class="btn btn-secondary" href="/ceir/list.php?thana=<?= urlencode($thana) ?>">Cancel</a>
+    <a class="btn btn-secondary" href="<?= BASE_PATH ?>/ceir/list.php?thana=<?= urlencode($thana) ?>">Cancel</a>
   </form>
 
 </div>

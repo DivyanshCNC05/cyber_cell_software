@@ -63,7 +63,12 @@ $CYBER_ALLOWED_BY_USER = [
 
 function cyber_allowed_thanas_for_logged_user(): array {
   global $CYBER_ALLOWED_BY_USER;
-  $n = (int)($_SESSION['user_number'] ?? 0);
+  // If ADMIN is acting as a specific user, prefer the `as_user` request param
+  if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
+    $n = (int)$_REQUEST['as_user'];
+  } else {
+    $n = (int)($_SESSION['user_number'] ?? 0);
+  }
   return $CYBER_ALLOWED_BY_USER[$n] ?? [];
 }
 
