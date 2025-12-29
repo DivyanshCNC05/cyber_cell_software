@@ -12,7 +12,7 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
 
 <div class="row g-3">
   <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/add.php">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/add.php?as_user=1">
       <div class="card h-100"><div class="card-body">
         <h5 class="card-title">Add</h5>
         <p class="card-text">Add new cyber complaint</p>
@@ -21,7 +21,7 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
   </div>
 
   <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/list.php">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/list.php?as_user=1">
       <div class="card h-100"><div class="card-body">
         <h5 class="card-title">Update</h5>
         <p class="card-text">Search and update complaint</p>
@@ -30,7 +30,7 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
   </div>
 
   <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/list.php">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/list.php?as_user=1">
       <div class="card h-100"><div class="card-body">
         <h5 class="card-title">Delete</h5>
         <p class="card-text">Search and delete complaint</p>
@@ -39,7 +39,7 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
   </div>
 
   <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/report.php">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/report.php?as_user=1">
       <div class="card h-100"><div class="card-body">
         <h5 class="card-title">Generate Report</h5>
         <p class="card-text">From date to date</p>
@@ -48,7 +48,7 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
   </div>
 
   <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/print.php">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/print.php?as_user=1">
       <div class="card h-100"><div class="card-body">
         <h5 class="card-title">Print</h5>
         <p class="card-text">Print report</p>

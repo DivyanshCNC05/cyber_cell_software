@@ -58,18 +58,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Login</title></head>
-<body>
-<h2>Login</h2>
-<?php if ($error): ?><p style="color:red;"><?= htmlspecialchars($error) ?></p><?php endif; ?>
-<form method="post">
-  <label>Email</label><br>
-  <input type="email" name="email" required><br><br>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Cyber Cell</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?= BASE_PATH ?>/assets/css/style.css" rel="stylesheet">
+</head>
+<body class="login-bg">
+  <div class="login-overlay"></div>
+  <div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card login-card p-4 shadow-lg">
+      <div class="text-center mb-3">
+        <h2 class="h4 mb-0">Cyber Cell</h2>
+        <div class="text-muted small">Secure Admin Console</div>
+      </div>
 
-  <label>Password</label><br>
-  <input type="password" name="password" required><br><br>
+      <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-  <button type="submit">Login</button>
-</form>
+      <form method="post" class="mb-0">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input class="form-control" type="email" name="email" required autofocus>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input class="form-control" type="password" name="password" required>
+        </div>
+        <div class="d-grid">
+          <button class="btn btn-primary btn-block" type="submit">Login</button>
+        </div>
+      </form>
+
+      <div class="mt-3 text-center text-muted small">© <?= date('Y') ?> Cyber Cell</div>
+    </div>
+  </div>
 </body>
 </html>
