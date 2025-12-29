@@ -40,7 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ':total_fraud'            => p('total_fraud') !== '' ? p('total_fraud') : 0,
       ':hold_date'              => p('hold_date') ?: null,
       ':hold_amount'            => p('hold_amount') !== '' ? p('hold_amount') : 0,
-      ':refund_amount'          => p('refund_amount') !== '' ? p('refund_amount') : 0,
+
+      // NEW fields (NULL if empty)
+      ':court_order'            => p('court_order') !== '' ? p('court_order') : null,
+      ':cyber_cell'             => p('cyber_cell') !== '' ? p('cyber_cell') : null,
+
       ':fraud_mobile_number'    => p('fraud_mobile_number'),
       ':fraud_imei_number'      => p('fraud_imei_number'),
       ':block_or_unblock'       => p('block_or_unblock','UNBLOCK'),
@@ -60,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $ts = strtotime($complaint_date);
       $monthStart = date('Y-m-01', $ts);
       $monthEnd   = date('Y-m-t', $ts);
-      $monthCode  = strtoupper(date('M', $ts)); // JAN/FEB... [web:725]
+      $monthCode  = strtoupper(date('M', $ts)); // JAN/FEB...
 
       // Serial for this table in this month
       $c = $pdo->prepare("SELECT COUNT(*) FROM {$table} WHERE complaint_date BETWEEN :ms AND :me");
@@ -68,19 +72,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $serial = ((int)$c->fetchColumn()) + 1;
 
       $prefix = strtoupper($selected_thana);
-      $serial2 = str_pad((string)$serial, 2, '0', STR_PAD_LEFT); // 01, 02... [web:714]
+      $serial2 = str_pad((string)$serial, 2, '0', STR_PAD_LEFT); // 01, 02...
       $complaintNo = $prefix . '-' . $monthCode . '-' . $serial2;
 
-      // 1) Insert including generated complaint_number
+      // Insert including generated complaint_number
       $sql = "INSERT INTO {$table}
         (complaint_number, applicant_name, acknowledgement_number, nature_of_fraud,
          incident_date, complaint_date, total_fraud, hold_date, hold_amount,
-         refund_amount, fraud_mobile_number, fraud_imei_number, block_or_unblock,
+         court_order, cyber_cell,
+         fraud_mobile_number, fraud_imei_number, block_or_unblock,
          digital_arrest, digital_amount, mobile_number, created_by)
         VALUES
         (:complaint_number, :applicant_name, :acknowledgement_number, :nature_of_fraud,
          :incident_date, :complaint_date, :total_fraud, :hold_date, :hold_amount,
-         :refund_amount, :fraud_mobile_number, :fraud_imei_number, :block_or_unblock,
+         :court_order, :cyber_cell,
+         :fraud_mobile_number, :fraud_imei_number, :block_or_unblock,
          :digital_arrest, :digital_amount, :mobile_number, :created_by)";
 
       $stmt = $pdo->prepare($sql);
@@ -178,8 +184,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="col-md-3">
-      <label class="form-label">Refund Amount</label>
-      <input type="number" step="0.01" class="form-control" name="refund_amount" value="<?= htmlspecialchars($_POST['refund_amount'] ?? '') ?>">
+      <label class="form-label">Court Order</label>
+      <input type="number" step="0.01" class="form-control" name="court_order" value="<?= htmlspecialchars($_POST['court_order'] ?? '') ?>">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Cyber Cell</label>
+      <input type="number" step="0.01" class="form-control" name="cyber_cell" value="<?= htmlspecialchars($_POST['cyber_cell'] ?? '') ?>">
     </div>
 
     <div class="col-md-3">
