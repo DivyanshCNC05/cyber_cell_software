@@ -46,15 +46,6 @@ echo '<!-- DEBUG: user1_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
       </div></div>
     </a>
   </div>
-
-  <div class="col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/cyber/print.php?as_user=1">
-      <div class="card h-100"><div class="card-body">
-        <h5 class="card-title">Print</h5>
-        <p class="card-text">Print report</p>
-      </div></div>
-    </a>
-  </div>
 </div>
 
 

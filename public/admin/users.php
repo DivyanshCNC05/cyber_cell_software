@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . '/access.php';
 require __DIR__ . '/../../includes/db.php';
 
 $msg = '';
