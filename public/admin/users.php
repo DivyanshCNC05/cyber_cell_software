@@ -70,7 +70,7 @@ $users = $pdo->query("SELECT user_id, email, role, full_name, is_active, user_nu
   <title>Admin - Users</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="b-light">
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-3">

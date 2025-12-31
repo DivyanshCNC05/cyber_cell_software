@@ -66,6 +66,79 @@ body.login-bg {
 .admin-dash{font-weight:700; color: #0d6efd;}
 .admin-hero .text-light{opacity:.9}
 
+/* Admin dashboard page background */
+/* Set body background to sky blue on admin pages */
+body.admin-bg { background-color: #87CEEB !important; }
+/* User1 Dashboard — upgraded layout & visuals */
+body.user1-bg { background: linear-gradient(135deg,#458388 0%, #c7f0ff 100%); min-height:100vh; }
+body.user1-bg .container { padding-top: 48px; padding-bottom: 48px; }
+body.user1-bg h3.mb-3 { color: #042b2f; font-weight:900; font-size:1.7rem; margin-bottom:0.6rem; position:relative; }
+body.user1-bg h3.mb-3::after { content:''; display:block; width:72px; height:6px; border-radius:4px; background: linear-gradient(90deg,#00c6ff,#0072ff); margin-top:12px; opacity:0.98; }
+
+/* Grid: larger, more modern tiles */
+body.user1-bg .row.g-3 { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.25rem; align-items:start; }
+
+/* Decorative floating accents */
+body.user1-bg::after { content:''; position:fixed; right:-140px; top:-70px; width:360px; height:360px; background: radial-gradient(circle at 30% 30%, rgba(0,198,255,0.12), transparent 40%); border-radius:50%; pointer-events:none; mix-blend-mode:multiply; filter: blur(10px); }
+body.user1-bg::before { content:''; position:fixed; left:-100px; bottom:-80px; width:300px; height:300px; background: radial-gradient(circle at 70% 70%, rgba(122,215,255,0.06), transparent 40%); border-radius:50%; pointer-events:none; mix-blend-mode:screen; filter: blur(20px); }
+
+/* Card base: bigger, cleaner, with subtle pattern */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card {
+  position:relative; padding:0; border-radius:16px; overflow:visible; min-height:140px;
+  background: linear-gradient(180deg,#ffffff,#f9feff);
+  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0 6px, transparent 6px 18px), linear-gradient(180deg,#ffffff,#f9feff);
+  box-shadow: 0 16px 50px rgba(4,34,48,0.06);
+  transition: transform .32s cubic-bezier(.2,.9,.2,1), box-shadow .28s ease;
+  display:block;
+}
+body.user1-bg .row.g-3 > .col-md-4 > a > .card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 36px 80px rgba(4,34,48,0.14); }
+
+/* Left accent bar */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:8px; background: linear-gradient(180deg,#00c6ff,#0072ff); border-top-left-radius:16px; border-bottom-left-radius:16px; box-shadow: inset 0 0 18px rgba(0,0,0,0.06);
+}
+
+/* Per-card floating label (top-right) */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card::after { content:''; position:absolute; top:12px; right:12px; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; color:#062f35; background: rgba(255,255,255,0.88); box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(1) > a > .card::after { content: 'Create'; }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(2) > a > .card::after { content: 'Edit'; }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(3) > a > .card::after { content: 'Remove'; }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(4) > a > .card::after { content: 'Report'; }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(5) > a > .card::after { content: 'Print'; }
+
+/* Icon circle inside card body: larger and richer */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card .card-body { display:flex; align-items:center; gap:18px; padding:1.6rem 1.6rem; }
+body.user1-bg .row.g-3 > .col-md-4 > a > .card .card-body::before {
+  content:""; display:inline-flex; align-items:center; justify-content:center; width:72px; height:72px; border-radius:14px; font-size:26px; color:#fff; flex:0 0 72px; transition: transform .28s ease, box-shadow .28s ease; box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+}
+body.user1-bg .row.g-3 > .col-md-4:nth-child(1) .card .card-body::before { content: "➕"; background: linear-gradient(135deg,#00d4a9,#00b4ff); }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(2) .card .card-body::before { content: "✏️"; background: linear-gradient(135deg,#ffb347,#ff7b7b); }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(3) .card .card-body::before { content: "🗑️"; background: linear-gradient(135deg,#ff9a8b,#ff6f6f); }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(4) .card .card-body::before { content: "📄"; background: linear-gradient(135deg,#7ad7ff,#4a8bff); }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(5) .card .card-body::before { content: "🖨️"; background: linear-gradient(135deg,#a0ffb0,#6be8a3); }
+
+/* Add a subtle animated glow for the 'Create' card to draw attention */
+@keyframes pulseGlow { 0% { box-shadow: 0 8px 30px rgba(0,198,255,0.06); } 50% { box-shadow: 0 18px 48px rgba(0,198,255,0.10); } 100% { box-shadow: 0 8px 30px rgba(0,198,255,0.06); } }
+body.user1-bg .row.g-3 > .col-md-4:nth-child(1) > a > .card { animation: pulseGlow 4.5s ease-in-out infinite; }
+
+/* Icon motion on hover */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card:hover .card-body::before { transform: translateY(-8px) rotate(6deg); }
+
+/* Typography */
+body.user1-bg .card-title { font-size: 1.15rem; font-weight:900; color:#032e33; margin-bottom:0.25rem; }
+body.user1-bg .card-text { color:#51686e; margin-bottom:0; font-size:0.95rem; }
+
+/* Accessibility focus state */
+a.text-decoration-none:focus-visible { outline: 3px solid rgba(0,118,255,0.18); outline-offset:6px; border-radius:14px; }
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  body.user1-bg .row.g-3 { grid-template-columns: 1fr; }
+  body.user1-bg .row.g-3 > .col-md-4 > a > .card .card-body { padding: 1rem; }
+  body.user1-bg .row.g-3 > .col-md-4 > a > .card .card-body::before { width:56px; height:56px; font-size:20px; }
+  body.user1-bg::after { right:-60px; top:-20px; width:220px; height:220px; }
+  body.user1-bg::before { left:-60px; bottom:-40px; width:200px; height:200px; }
+}
 .admin-card {
   border: none;
   border-radius: 12px;

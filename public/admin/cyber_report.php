@@ -68,7 +68,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>@media print{.no-print{display:none!important;}}</style>
 </head>
-<body class="bg-light">
+<body class="b-light">
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-3">

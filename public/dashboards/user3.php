@@ -57,4 +57,4 @@ echo '<!-- DEBUG: user3_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
   </div>
 </div>
 
-<?php require __DIR__ . '/../../templates/footer.php'; ?>
+<!-- Footer -->

@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($title ?? 'Dashboard') ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?= BASE_PATH ?>/assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<?php
+$uri = $_SERVER['REQUEST_URI'] ?? '';
+$pageClass = '';
+if (strpos($uri, '/dashboards/admin.php') !== false) { $pageClass = ' admin-bg'; }
+if (strpos($uri, '/dashboards/user1.php') !== false)  { $pageClass = ' user1-bg'; }
+?>
+<body class="<?= htmlspecialchars('bg-light' . $pageClass) ?>">
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
     <span class="navbar-brand mb-0 h1">Cyber Cell</span>

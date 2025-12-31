@@ -34,4 +34,4 @@ require __DIR__ . '/../../templates/header.php';
   </a></div> 
 </div>
 
-<?php require __DIR__ . '/../../templates/footer.php'; ?>
+
