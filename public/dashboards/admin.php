@@ -24,8 +24,8 @@ require __DIR__ . '/../../templates/header.php';
 <div class="row g-3">
 
   <!-- Existing cards -->
-  <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="./user1.php?as_user=1">
+<div class="col-sm-6 col-md-4">
+   <a class="text-decoration-none" href="./user1.php?as_user=1">
       <div class="card h-100 admin-card card-hover">
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-primary me-3">1</div>
