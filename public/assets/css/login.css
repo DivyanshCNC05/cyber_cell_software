@@ -1,0 +1,58 @@
+/* Login page styles */
+.login-bg .img {
+    background-color: rgb(44, 42, 42);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 99vh;
+  position: relative;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+}
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  /* background: linear-gradient(180deg, rgba(3,8,20,0.6), rgba(3,8,20,0.7)); */
+  z-index: 0;
+}
+
+.login-card {
+  max-width: 460px;
+  width: 100%;
+  backdrop-filter: blur(8px) saturate(120%);
+  background: white;
+  /* border: 1px solid rgba(15,23,42,0.06); */
+  border-radius: 14px;
+  z-index: 1;
+  box-shadow: var(--card-shadow);
+}
+.login-form{
+    background-color: #586170;
+}
+
+/* .login-card .form-label{font-weight:600;color:#0b2548} */
+/* .login-card .form-control{border-radius:8px;border:1px solid #e6eef9} */
+/* .login-card .btn-primary{background:var(--accent);border:0;padding:12px;font-weight:600} */
+/* .login-card .btn-primary:hover{filter:brightness(.98);transform:translateY(-1px);box-shadow:0 10px 20px rgba(79,70,229,0.12)} */
+
+/* .login-card .text-muted{color:#718096} */
+@media (max-width: 768px) {
+    .login-bg .img {
+        min-height: 35vh;
+    }
+    .login-bg .img img{
+        height: 250px;
+    }
+    .login-form{
+    background-color: rgb(44, 42, 42);
+}
+
+.login-card {
+  max-width: 360px;
+  width: 100%;
+  
+}
+}

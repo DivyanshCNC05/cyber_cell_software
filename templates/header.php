@@ -11,7 +11,12 @@
 $uri = $_SERVER['REQUEST_URI'] ?? '';
 $pageClass = '';
 if (strpos($uri, '/dashboards/admin.php') !== false) { $pageClass = ' admin-bg'; }
-if (strpos($uri, '/dashboards/user1.php') !== false)  { $pageClass = ' user1-bg'; }
+if (
+  strpos($uri, '/dashboards/user1.php') !== false ||
+  strpos($uri, '/dashboards/user2.php') !== false ||
+  strpos($uri, '/dashboards/user3.php') !== false ||
+  strpos($uri, '/dashboards/ceir.php') !== false
+)  { $pageClass = ' user1-bg'; }
 ?>
 <body class="<?= htmlspecialchars('bg-light' . $pageClass) ?>">
 <nav class="navbar navbar-dark bg-dark">

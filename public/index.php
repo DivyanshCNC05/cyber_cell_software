@@ -63,10 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - Cyber Cell</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= BASE_PATH ?>/assets/css/style.css" rel="stylesheet">
+  <link href="./assets/css/login.css" rel="stylesheet">
 </head>
-<body class="login-bg">
-  <div class="login-overlay"></div>
+<body>
+ <div class="row login-bg p-0 m-0">
+  <div class="col-md-6 col-12 img  p-0">
+    <img src="./assets/image/cyber-logo.png" alt="">
+  </div>
+  <div class="col-md-6 col-12 login-form p-0 m-0">
+     <div class="login-overlay"></div>
   <div class="d-flex align-items-center justify-content-center min-vh-100">
     <div class="card login-card p-4 shadow-lg">
       <div class="text-center mb-3">
@@ -93,5 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="mt-3 text-center text-muted small">© <?= date('Y') ?> Cyber Cell</div>
     </div>
   </div>
+  </div>
+ </div>
 </body>
 </html>

@@ -1,48 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
-:root{
-  --bg-dark: #081226;
-  --primary: #0d6efd;
-  --muted: #6c757d;
-  --glass: rgba(255,255,255,0.86);
-  --card-shadow: 0 10px 30px rgba(2,6,23,0.08);
-  --accent: linear-gradient(135deg,#0d6efd,#6f5af6);
-}
-
-*{box-sizing:border-box;font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif}
-
-/* Login page styles */
-
-@media (max-width: 576px) {
-  .login-card { margin: 16px; }
-}
-
-/* Header / Navbar tweaks */
-.navbar{background: linear-gradient(90deg, #07102b, #0e1b3b);}
-.navbar .navbar-brand{font-weight:700;letter-spacing:.3px}
-.navbar .btn-outline-light{border-color: rgba(255,255,255,0.15)}
-
-/* Admin dashboard styles */
-.admin-hero {
-  background: linear-gradient(135deg,#07102b 0%, #0f2a52 100%);
-  padding: 20px 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 26px rgba(2,6,23,0.12);
-}
-.admin-dash{font-weight:700; color: #0d6efd;}
-.admin-hero .text-light{opacity:.9}
-
-/* Admin dashboard page background */
-/* Set body background to sky blue on admin pages */
-body.admin-bg { background-color: #87CEEB !important; }
-/* User1 Dashboard — upgraded layout & visuals */
-/* body.user1-bg { background: black; min-height:100vh; }
-body.user1-bg .container { padding-top: 48px; padding-bottom: 48px; } */
+body.user1-bg { background: black; min-height:100vh; }
+body.user1-bg .container { padding-top: 48px; padding-bottom: 48px; }
 body.user1-bg h3.mb-3 { color: #000000; font-weight:900; font-size:1.7rem; margin-bottom:0.6rem; position:relative; }
 body.user1-bg h3.mb-3::after { content:''; display:block; width:72px; height:6px; border-radius:4px; background: linear-gradient(90deg,#00c6ff,#0072ff); margin-top:12px; opacity:0.98; }
+
+body.admin-bg { background-color: #87CEEB !important; }
+/* User1 Dashboard — upgraded layout & visuals */
+body.user2-bg { background: black; min-height:100vh; }
+body.user2-bg .container { padding-top: 48px; padding-bottom: 48px; }
+body.user2-bg h3.mb-3 { color: #000000; font-weight:900; font-size:1.7rem; margin-bottom:0.6rem; position:relative; }
+body.user2-bg h3.mb-3::after { content:''; display:block; width:72px; height:6px; border-radius:4px; background: linear-gradient(90deg,#00c6ff,#0072ff); margin-top:12px; opacity:0.98; }
+
+/* Grid: larger, more modern tiles */
+body.user1-bg .row.g-3 { display:grid; grid-template-columns: (300px, 10fr); gap:1.25rem; align-items:start; }
+body.user2-bg .row.g-3 { display:grid; grid-template-columns: (1, 2fr); gap:1.25rem; align-items:start; }
+/* Decorative floating accents */
+body.user1-bg::after { content:''; position:fixed; right:-140px; top:-70px; width:360px; height:360px; background: radial-gradient(circle at 30% 30%, rgba(0,198,255,0.12), transparent 40%); border-radius:50%; pointer-events:none; mix-blend-mode:multiply; filter: blur(10px); }
 body.user1-bg::before { content:''; position:fixed; left:-100px; bottom:-80px; width:300px; height:300px; background: radial-gradient(circle at 70% 70%, rgba(122,215,255,0.06), transparent 40%); border-radius:50%; pointer-events:none; mix-blend-mode:screen; filter: blur(20px); }
 
-
+/* Card base: bigger, cleaner, with subtle pattern */
 body.user1-bg .row.g-3 > .col-md-4 > a > .card {
   position:relative; padding:0; border-radius:16px; overflow:visible; min-height:140px;
   background: linear-gradient(180deg,#ffffff,#f9feff);
@@ -52,6 +27,8 @@ body.user1-bg .row.g-3 > .col-md-4 > a > .card {
   display:block;
 }
 body.user1-bg .row.g-3 > .col-md-4 > a > .card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 36px 80px rgba(4,34,48,0.14); }
+
+/* Left accent bar */
 body.user1-bg .row.g-3 > .col-md-4 > a > .card::before {
   content:''; position:absolute; left:0; top:0; bottom:0; width:8px; background: linear-gradient(180deg,#00c6ff,#0072ff); border-top-left-radius:16px; border-bottom-left-radius:16px; box-shadow: inset 0 0 18px rgba(0,0,0,0.06);
 }
@@ -63,7 +40,6 @@ body.user1-bg .row.g-3 > .col-md-4:nth-child(2) > a > .card::after { content: 'E
 body.user1-bg .row.g-3 > .col-md-4:nth-child(3) > a > .card::after { content: 'Remove'; }
 body.user1-bg .row.g-3 > .col-md-4:nth-child(4) > a > .card::after { content: 'Report'; }
 body.user1-bg .row.g-3 > .col-md-4:nth-child(5) > a > .card::after { content: 'Print'; }
-
 
 /* Icon circle inside card body: larger and richer */
 body.user1-bg .row.g-3 > .col-md-4 > a > .card .card-body { display:flex; align-items:center; gap:18px; padding:1.6rem 1.6rem; }
@@ -80,6 +56,9 @@ body.user1-bg .row.g-3 > .col-md-4:nth-child(5) .card .card-body::before { conte
 @keyframes pulseGlow { 0% { box-shadow: 0 8px 30px rgba(0,198,255,0.06); } 50% { box-shadow: 0 18px 48px rgba(0,198,255,0.10); } 100% { box-shadow: 0 8px 30px rgba(0,198,255,0.06); } }
 body.user1-bg .row.g-3 > .col-md-4:nth-child(1) > a > .card { animation: pulseGlow 4.5s ease-in-out infinite; }
 
+/* Icon motion on hover */
+body.user1-bg .row.g-3 > .col-md-4 > a > .card:hover .card-body::before { transform: translateY(-8px) rotate(6deg); }
+
 /* Typography */
 body.user1-bg .card-title { font-size: 1.15rem; font-weight:900; color:#032e33; margin-bottom:0.25rem; }
 body.user1-bg .card-text { color:#51686e; margin-bottom:0; font-size:0.95rem; }
@@ -95,7 +74,6 @@ a.text-decoration-none:focus-visible { outline: 3px solid rgba(0,118,255,0.18); 
   body.user1-bg::after { right:-60px; top:-20px; width:220px; height:220px; }
   body.user1-bg::before { left:-60px; bottom:-40px; width:200px; height:200px; }
 }
-
 .admin-card {
   border: none;
   border-radius: 12px;
@@ -122,24 +100,3 @@ a.text-decoration-none:focus-visible { outline: 3px solid rgba(0,118,255,0.18); 
 .card-icon.bg-warning { background: linear-gradient(180deg,#ffc107,#ffb020); }
 .card-icon.bg-dark { background: linear-gradient(180deg,#212529,#111315); }
 .card-icon.bg-secondary { background: linear-gradient(180deg,#6c757d,#595e65); }    
-
-/* Accent bar on the left of card */
-.admin-card::before{
-  content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background: linear-gradient(180deg,#6f5af6,#0d6efd); border-top-left-radius:12px; border-bottom-left-radius:12px;
-  transform: translateX(-8px); opacity:0; transition: transform .22s ease, opacity .22s ease;
-}
-.admin-card:hover::before{transform: translateX(0); opacity:1}
-
-/* Responsive grid adjustments */
-@media (max-width: 992px){ .card-icon{width:56px;height:56px;font-size:16px} }
-@media (max-width: 768px){
-  .admin-hero{ text-align:center }
-  .admin-hero .mt-3{ margin-top:.75rem !important }
-}
-
-/* Small animations */
-@keyframes floatIn{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none}}
-.row.g-3 > .col-sm-6{animation:floatIn .28s ease both}
-
-/* subtle table row hover for reports */
-table.table tbody tr:hover{background:#fbfdff}
