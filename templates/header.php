@@ -21,7 +21,7 @@ if (
 <body class="<?= htmlspecialchars('bg-light' . $pageClass) ?>">
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <span class="navbar-brand mb-0 h1">Cyber Cell</span>
+    <span class="navbar-cust-logo"><img src="<?= BASE_PATH ?>/assets/image/cyber-logo.png" alt="Cyber Cell Logo" style="height: 6rem; padding-left: 1rem;"></span>
     <a class="btn btn-outline-light btn-sm" href="<?= BASE_PATH ?>/logout.php">Logout</a>
   </div>
 </nav>

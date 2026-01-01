@@ -14,30 +14,37 @@ $grand = [
   'complaints' => 0,
   'fraud' => 0.0,
   'hold' => 0.0,
-  'refund' => 0.0,
+  'digital_arrest' => 0,
+  'digital_amount' => 0.0,
 ];
 
 function f2($v){ return number_format((float)$v, 2, '.', ''); }
 
 if ($from && $to) {
   foreach ($CYBER_TABLES as $thanaKey => $table) {
+
+    // IMPORTANT: $table must come from your fixed mapping in thanas.php (not user input).
     $sql = "SELECT
               COUNT(*) AS total_complaints,
               COALESCE(SUM(total_fraud), 0) AS total_fraud,
               COALESCE(SUM(hold_amount), 0) AS total_hold,
-              COALESCE(SUM(refund_amount), 0) AS total_refund
+              COALESCE(SUM(digital_arrest), 0) AS total_digital_arrest,
+              COALESCE(SUM(digital_amount), 0) AS total_digital_amount
             FROM {$table}
             WHERE complaint_date BETWEEN :from AND :to";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':from' => $from, ':to' => $to]);
-    $a = $stmt->fetch();
+    $a = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $c = (int)($a['total_complaints'] ?? 0);
+
     if ($c > 0) {
       $fraud = (float)($a['total_fraud'] ?? 0);
       $hold  = (float)($a['total_hold'] ?? 0);
-      $ref   = (float)($a['total_refund'] ?? 0);
+      $digCnt = (int)($a['total_digital_arrest'] ?? 0);
+      $digAmt = (float)($a['total_digital_amount'] ?? 0);
+
       $holdPct = ($fraud > 0) ? round(($hold / $fraud) * 100, 2) : 0;
 
       $rows[] = [
@@ -45,14 +52,16 @@ if ($from && $to) {
         'complaints' => $c,
         'fraud' => $fraud,
         'hold' => $hold,
-        'refund' => $ref,
+        'digital_arrest' => $digCnt,
+        'digital_amount' => $digAmt,
         'hold_pct' => $holdPct,
       ];
 
       $grand['complaints'] += $c;
       $grand['fraud'] += $fraud;
       $grand['hold'] += $hold;
-      $grand['refund'] += $ref;
+      $grand['digital_arrest'] += $digCnt;
+      $grand['digital_amount'] += $digAmt;
     }
   }
 }
@@ -68,7 +77,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>@media print{.no-print{display:none!important;}}</style>
 </head>
-<body class="b-light">
+<body class="bg-light">
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -104,24 +113,26 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <th>Total Complaints</th>
           <th>Total Fraud</th>
           <th>Total Hold</th>
-          <th>Total Refund</th>
+          <th>Digital Arrest</th>
+          <th>Digital Amount</th>
           <th>Hold %</th>
         </tr>
       </thead>
       <tbody>
       <?php if (!$from || !$to): ?>
-        <tr><td colspan="7" class="text-center">Select From and To date, then click Generate.</td></tr>
+        <tr><td colspan="8" class="text-center">Select From and To date, then click Generate.</td></tr>
       <?php elseif (!$rows): ?>
-        <tr><td colspan="7" class="text-center">No data found for this date range.</td></tr>
+        <tr><td colspan="8" class="text-center">No data found for this date range.</td></tr>
       <?php else: ?>
         <?php foreach ($rows as $i => $r): ?>
           <tr>
-            <td><?= $i+1 ?></td>
+            <td><?= $i + 1 ?></td>
             <td><?= htmlspecialchars($r['thana']) ?></td>
             <td><?= (int)$r['complaints'] ?></td>
             <td><?= f2($r['fraud']) ?></td>
             <td><?= f2($r['hold']) ?></td>
-            <td><?= f2($r['refund']) ?></td>
+            <td><?= (int)$r['digital_arrest'] ?></td>
+            <td><?= f2($r['digital_amount']) ?></td>
             <td><?= f2($r['hold_pct']) ?>%</td>
           </tr>
         <?php endforeach; ?>
@@ -131,7 +142,8 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <td><?= (int)$grand['complaints'] ?></td>
           <td><?= f2($grand['fraud']) ?></td>
           <td><?= f2($grand['hold']) ?></td>
-          <td><?= f2($grand['refund']) ?></td>
+          <td><?= (int)$grand['digital_arrest'] ?></td>
+          <td><?= f2($grand['digital_amount']) ?></td>
           <td><?= f2($grandHoldPct) ?>%</td>
         </tr>
       <?php endif; ?>

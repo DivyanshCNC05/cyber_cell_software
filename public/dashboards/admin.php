@@ -30,8 +30,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-primary me-3">1</div>
           <div>
-            <h5 class="card-title mb-1">User1 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Add / update / delete complaints (User 1)</p>
+            <h5 class="card-title mb-1">User-1 Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage User 1 Dashboard</p>
           </div>
         </div>
       </div>
@@ -44,8 +44,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-info me-3">2</div>
           <div>
-            <h5 class="card-title mb-1">User2 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Add / update / delete complaints (User 2)</p>
+            <h5 class="card-title mb-1">User-2 Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage User 2 Dashboard</p>
           </div>
         </div>
       </div>
@@ -58,8 +58,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-success me-3">3</div>
           <div>
-            <h5 class="card-title mb-1">User3 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Add / update / delete complaints (User 3)</p>
+            <h5 class="card-title mb-1">User-3 Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage User 3 Dashboard</p>
           </div>
         </div>
       </div>
@@ -81,13 +81,13 @@ require __DIR__ . '/../../templates/header.php';
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="../admin/report.php">
+    <a class="text-decoration-none" href="#">
       <div class="card h-100 admin-card card-hover">
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-dark me-3">R</div>
           <div>
             <h5 class="card-title mb-1">Generate Report</h5>
-            <p class="card-text small text-muted mb-0">All thanas</p>
+            <p class="card-text small text-muted mb-0">Comming soon</p>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ require __DIR__ . '/../../templates/header.php';
           <div class="card-icon bg-secondary me-3">U</div>
           <div>
             <h5 class="card-title mb-1">User Management</h5>
-            <p class="card-text small text-muted mb-0">Create / activate / reset password</p>
+            <p class="card-text small text-muted mb-0">Manage users and their permissions</p>
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ require __DIR__ . '/../../templates/header.php';
           <div class="card-icon bg-success me-3">G</div>
           <div>
             <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
-            <p class="card-text small text-muted mb-0">CSP/SDOP/DSP + Hold %</p>
+            <p class="card-text small text-muted mb-0">Admin view</p>
           </div>
         </div>
       </div>
