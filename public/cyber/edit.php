@@ -2,7 +2,7 @@
 require __DIR__ . '/../../includes/db.php';
 require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/thanas.php';
-
+require __DIR__ . '/../../templates/header.php';
 // Allow ADMIN to act as a user if as_user is provided
 if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
   $acting_user = (int)($_REQUEST['as_user']);
@@ -20,101 +20,109 @@ $thana = $_GET['thana'] ?? '';
 $sno   = isset($_GET['sno']) ? (int)$_GET['sno'] : 0;
 
 if (!in_array($thana, $allowed, true) || !isset($CYBER_TABLES[$thana])) {
-    die('Invalid / unauthorized thana.');
+  die('Invalid / unauthorized thana.');
 }
 if ($sno <= 0) die('Invalid S.No.');
 
 $table = $CYBER_TABLES[$thana];
 
 $error = '';
-$success = '';
 
 /* 1) Fetch record */
 $stmt = $pdo->prepare("SELECT * FROM {$table} WHERE sno = :sno LIMIT 1");
 $stmt->execute([':sno' => $sno]);
-$row = $stmt->fetch();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$row) die('Record not found.'); // fetch() returns false if no row [web:334]
+if (!$row) die('Record not found.'); // fetch() returns false if no row. [web:60]
 
 /* 2) Update on POST */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $data = [
-      ':complaint_number'       => p('complaint_number'),
-      ':applicant_name'         => p('applicant_name'),
-      ':acknowledgement_number' => p('acknowledgement_number'),
-      ':nature_of_fraud'        => p('nature_of_fraud'),
-      ':incident_date'          => p('incident_date') ?: null,
-      ':complaint_date'         => p('complaint_date'),
-      ':total_fraud'            => p('total_fraud') !== '' ? p('total_fraud') : 0,
-      ':hold_date'              => p('hold_date') ?: null,
-      ':hold_amount'            => p('hold_amount') !== '' ? p('hold_amount') : 0,
-      ':refund_amount'          => p('refund_amount') !== '' ? p('refund_amount') : 0,
-      ':fraud_mobile_number'    => p('fraud_mobile_number'),
-      ':fraud_imei_number'      => p('fraud_imei_number'),
-      ':block_or_unblock'       => p('block_or_unblock', 'UNBLOCK'),
-      ':digital_arrest'         => p('digital_arrest') !== '' ? (int)p('digital_arrest') : 0,
-      ':digital_amount'         => p('digital_amount') !== '' ? p('digital_amount') : 0,
-      ':mobile_number'          => p('mobile_number'),
-      ':sno'                    => $sno,
-    ];
+  $data = [
+    ':complaint_number'        => p('complaint_number'),
+    ':applicant_name'          => p('applicant_name'),
+    ':acknowledgement_number'  => p('acknowledgement_number'),
+    ':nature_of_fraud'         => p('nature_of_fraud'),
+    ':incident_date'           => p('incident_date') ?: null,
+    ':complaint_date'          => p('complaint_date'),
 
-    if ($data[':complaint_date'] === '') {
-        $error = 'Complaint date is required.';
-    } elseif ($data[':applicant_name'] === '') {
-        $error = 'Applicant name is required.';
-    } else {
-        $sql = "UPDATE {$table} SET
-            complaint_number       = :complaint_number,
-            applicant_name         = :applicant_name,
-            acknowledgement_number = :acknowledgement_number,
-            nature_of_fraud        = :nature_of_fraud,
-            incident_date          = :incident_date,
-            complaint_date         = :complaint_date,
-            total_fraud            = :total_fraud,
-            hold_date              = :hold_date,
-            hold_amount            = :hold_amount,
-            refund_amount          = :refund_amount,
-            fraud_mobile_number    = :fraud_mobile_number,
-            fraud_imei_number      = :fraud_imei_number,
-            block_or_unblock       = :block_or_unblock,
-            digital_arrest         = :digital_arrest,
-            digital_amount         = :digital_amount,
-            mobile_number          = :mobile_number
-          WHERE sno = :sno
-          LIMIT 1";
+    ':total_fraud'             => p('total_fraud') !== '' ? p('total_fraud') : 0,
+    ':hold_date'               => p('hold_date') ?: null,
+    ':hold_amount'             => p('hold_amount') !== '' ? p('hold_amount') : 0,
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($data);
+    ':court_order'             => p('court_order') !== '' ? p('court_order') : null,
+    ':cyber_cell'              => p('cyber_cell') !== '' ? p('cyber_cell') : null,
 
-        // Redirect back to list (prevents resubmit on refresh)
-        $q = 'thana=' . urlencode($thana) . '&updated=1';
-        if (isset($acting_user) && $acting_user) { $q .= '&as_user=' . $acting_user; }
-        header('Location: ' . BASE_PATH . '/cyber/list.php?' . $q);
-        exit;
-    }
+    ':fraud_mobile_number'     => p('fraud_mobile_number'),
+    ':fraud_imei_number'       => p('fraud_imei_number'),
+    ':block_or_unblock'        => p('block_or_unblock', 'UNBLOCK'),
+
+    ':digital_arrest'          => p('digital_arrest') !== '' ? (int)p('digital_arrest') : 0,
+    ':digital_amount'          => p('digital_amount') !== '' ? p('digital_amount') : 0,
+
+    ':mobile_number'           => p('mobile_number'),
+    ':sno'                     => $sno,
+  ];
+
+  if ($data[':complaint_date'] === '') {
+    $error = 'Complaint date is required.';
+  } elseif ($data[':applicant_name'] === '') {
+    $error = 'Applicant name is required.';
+  } else {
+
+    $sql = "UPDATE {$table} SET
+              complaint_number        = :complaint_number,
+              applicant_name          = :applicant_name,
+              acknowledgement_number  = :acknowledgement_number,
+              nature_of_fraud         = :nature_of_fraud,
+              incident_date           = :incident_date,
+              complaint_date          = :complaint_date,
+              total_fraud             = :total_fraud,
+              hold_date               = :hold_date,
+              hold_amount             = :hold_amount,
+              court_order             = :court_order,
+              cyber_cell              = :cyber_cell,
+              fraud_mobile_number     = :fraud_mobile_number,
+              fraud_imei_number       = :fraud_imei_number,
+              block_or_unblock        = :block_or_unblock,
+              digital_arrest          = :digital_arrest,
+              digital_amount          = :digital_amount,
+              mobile_number           = :mobile_number
+            WHERE sno = :sno
+            LIMIT 1";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($data);
+
+    // Redirect back to list (prevents resubmit on refresh)
+    $q = 'thana=' . urlencode($thana) . '&updated=1';
+    if (!empty($acting_user)) { $q .= '&as_user=' . (int)$acting_user; }
+    header('Location: ' . rtrim(BASE_PATH, '/') . '/cyber/list.php?' . $q);
+    exit; // stop execution after redirect. [web:55]
+  }
 }
 
 // refresh $row for display if error (keep posted values)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
-    $row = array_merge($row, [
-        'complaint_number'       => $_POST['complaint_number'] ?? '',
-        'applicant_name'         => $_POST['applicant_name'] ?? '',
-        'acknowledgement_number' => $_POST['acknowledgement_number'] ?? '',
-        'nature_of_fraud'        => $_POST['nature_of_fraud'] ?? '',
-        'incident_date'          => $_POST['incident_date'] ?? '',
-        'complaint_date'         => $_POST['complaint_date'] ?? '',
-        'total_fraud'            => $_POST['total_fraud'] ?? '',
-        'hold_date'              => $_POST['hold_date'] ?? '',
-        'hold_amount'            => $_POST['hold_amount'] ?? '',
-        'refund_amount'          => $_POST['refund_amount'] ?? '',
-        'fraud_mobile_number'    => $_POST['fraud_mobile_number'] ?? '',
-        'fraud_imei_number'      => $_POST['fraud_imei_number'] ?? '',
-        'block_or_unblock'       => $_POST['block_or_unblock'] ?? 'UNBLOCK',
-        'digital_arrest'         => $_POST['digital_arrest'] ?? '',
-        'digital_amount'         => $_POST['digital_amount'] ?? '',
-        'mobile_number'          => $_POST['mobile_number'] ?? '',
-    ]);
+  $row = array_merge($row, [
+    'complaint_number'        => $_POST['complaint_number'] ?? '',
+    'applicant_name'          => $_POST['applicant_name'] ?? '',
+    'acknowledgement_number'  => $_POST['acknowledgement_number'] ?? '',
+    'nature_of_fraud'         => $_POST['nature_of_fraud'] ?? '',
+    'incident_date'           => $_POST['incident_date'] ?? '',
+    'complaint_date'          => $_POST['complaint_date'] ?? '',
+    'total_fraud'             => $_POST['total_fraud'] ?? '',
+    'hold_date'               => $_POST['hold_date'] ?? '',
+    'hold_amount'             => $_POST['hold_amount'] ?? '',
+    'court_order'             => $_POST['court_order'] ?? '',
+    'cyber_cell'              => $_POST['cyber_cell'] ?? '',
+    'fraud_mobile_number'     => $_POST['fraud_mobile_number'] ?? '',
+    'fraud_imei_number'       => $_POST['fraud_imei_number'] ?? '',
+    'block_or_unblock'        => $_POST['block_or_unblock'] ?? 'UNBLOCK',
+    'digital_arrest'          => $_POST['digital_arrest'] ?? '',
+    'digital_amount'          => $_POST['digital_amount'] ?? '',
+    'mobile_number'           => $_POST['mobile_number'] ?? '',
+  ]);
 }
 ?>
 <!doctype html>
@@ -129,7 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Edit Complaint (<?= htmlspecialchars(cyber_thana_label($thana)) ?>) - S.No <?= (int)$sno ?></h3>
-    <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= isset($acting_user) && $acting_user ? '&as_user=' . $acting_user : '' ?>">Back</a>
+    <a class="btn btn-outline-secondary btn-sm"
+       href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= !empty($acting_user) ? '&as_user=' . (int)$acting_user : '' ?>">
+      Back
+    </a>
   </div>
 
   <?php if ($error): ?>
@@ -137,7 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
   <?php endif; ?>
 
   <form method="post" class="row g-3">
-    <input type="hidden" name="as_user" value="<?= htmlspecialchars($acting_user) ?>">
+    <input type="hidden" name="as_user" value="<?= htmlspecialchars((string)$acting_user) ?>">
+
     <div class="col-md-4">
       <label class="form-label">Complaint Number</label>
       <input class="form-control" name="complaint_number" value="<?= htmlspecialchars($row['complaint_number'] ?? '') ?>">
@@ -184,8 +196,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     </div>
 
     <div class="col-md-3">
-      <label class="form-label">Refund Amount</label>
-      <input type="number" step="0.01" class="form-control" name="refund_amount" value="<?= htmlspecialchars($row['refund_amount'] ?? '') ?>">
+      <label class="form-label">Court Order</label>
+      <input type="number" step="0.01" class="form-control" name="court_order" value="<?= htmlspecialchars($row['court_order'] ?? '') ?>">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Cyber Cell</label>
+      <input type="number" step="0.01" class="form-control" name="cyber_cell" value="<?= htmlspecialchars($row['cyber_cell'] ?? '') ?>">
     </div>
 
     <div class="col-md-3">
@@ -223,7 +240,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
 
     <div class="col-12">
       <button class="btn btn-primary" type="submit">Update</button>
-      <a class="btn btn-secondary" href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= isset($acting_user) && $acting_user ? '&as_user=' . $acting_user : '' ?>">Cancel</a>
+      <a class="btn btn-secondary"
+         href="<?= BASE_PATH ?>/cyber/list.php?thana=<?= urlencode($thana) ?><?= !empty($acting_user) ? '&as_user=' . (int)$acting_user : '' ?>">
+        Cancel
+      </a>
     </div>
   </form>
 </div>

@@ -2,6 +2,8 @@
 require __DIR__ . '/../../includes/db.php';
 require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/ceir_thanas.php';
+require __DIR__ . '/../../templates/header.php';
+
 
 // Allow ADMIN to access CEIR pages
 if (($_SESSION['role'] ?? '') === 'ADMIN') {
