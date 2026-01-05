@@ -14,7 +14,8 @@ $rows = [];
 $grand = [
   'complaints' => 0,
   'fraud' => 0.0,
-  'hold' => 0.0,
+  'refund' => 0.0, // court_order + cyber_cell
+  'hold' => 0.0,   // only for hold% calculation (not displayed)
 ];
 
 function f2($v){ return number_format((float)$v, 2, '.', ''); }
@@ -22,11 +23,12 @@ function f2($v){ return number_format((float)$v, 2, '.', ''); }
 if ($from && $to) {
   foreach ($CYBER_TABLES as $thanaKey => $table) {
 
-    // IMPORTANT: $table must come from your fixed mapping in thanas.php (not user input).
     $sql = "SELECT
               COUNT(*) AS total_complaints,
               COALESCE(SUM(total_fraud), 0) AS total_fraud,
-              COALESCE(SUM(hold_amount), 0) AS total_hold
+              COALESCE(SUM(hold_amount), 0) AS total_hold,
+              COALESCE(SUM(court_order), 0) AS total_court_order,
+              COALESCE(SUM(cyber_cell), 0) AS total_cyber_cell
             FROM {$table}
             WHERE complaint_date BETWEEN :from AND :to";
 
@@ -40,19 +42,24 @@ if ($from && $to) {
       $fraud = (float)($a['total_fraud'] ?? 0);
       $hold  = (float)($a['total_hold'] ?? 0);
 
+      $court  = (float)($a['total_court_order'] ?? 0);
+      $cell   = (float)($a['total_cyber_cell'] ?? 0);
+      $refund = $court + $cell;
+
       $holdPct = ($fraud > 0) ? round(($hold / $fraud) * 100, 2) : 0;
 
       $rows[] = [
         'thana' => cyber_thana_label($thanaKey),
         'complaints' => $c,
         'fraud' => $fraud,
-        'hold' => $hold,
+        'refund' => $refund,
         'hold_pct' => $holdPct,
       ];
 
       $grand['complaints'] += $c;
       $grand['fraud'] += $fraud;
-      $grand['hold'] += $hold;
+      $grand['refund'] += $refund;
+      $grand['hold'] += $hold; // keep for grand hold%
     }
   }
 }
@@ -62,8 +69,7 @@ usort($rows, function ($a, $b) {
   return $b['hold_pct'] <=> $a['hold_pct'];
 });
 
-
-$grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud']) * 100, 2) : 0;
+$grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['refund'] / $grand['fraud']) * 100, 2) : 0;
 ?>
 <!doctype html>
 <html>
@@ -109,7 +115,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <th>Thana</th>
           <th>Total Complaints</th>
           <th>Total Fraud Amount</th>
-          <th>Total Hold Amount</th>
+          <th>Total Refund Amount</th>
           <th>Hold %</th>
         </tr>
       </thead>
@@ -125,7 +131,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
             <td><?= htmlspecialchars($r['thana']) ?></td>
             <td><?= (int)$r['complaints'] ?></td>
             <td><?= f2($r['fraud']) ?></td>
-            <td><?= f2($r['hold']) ?></td>
+            <td><?= f2($r['refund']) ?></td>
             <td><?= f2($r['hold_pct']) ?>%</td>
           </tr>
         <?php endforeach; ?>
@@ -134,7 +140,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <td colspan="2">Grand Total</td>
           <td><?= (int)$grand['complaints'] ?></td>
           <td><?= f2($grand['fraud']) ?></td>
-          <td><?= f2($grand['hold']) ?></td>
+          <td><?= f2($grand['refund']) ?></td>
           <td><?= f2($grandHoldPct) ?>%</td>
         </tr>
       <?php endif; ?>

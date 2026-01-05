@@ -4,7 +4,6 @@ require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/thanas.php';
 require __DIR__ . '/../../templates/header.php';
 
-
 // Allow ADMIN to act as a user if as_user is provided
 if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
   $acting_user = (int)($_REQUEST['as_user']);
@@ -26,8 +25,13 @@ echo '<!-- DEBUG: cyber_report: from=' . htmlspecialchars($from) . ' to=' . html
 $rows = [];
 $grand = [
   'total_complaints' => 0,
+  'total_acknowledgement' => 0,
   'total_fraud' => 0.0,
   'total_hold' => 0.0,
+  'total_refund_amount' => 0.0,
+  'total_digital_arrest' => 0,
+  'total_digital_amount' => 0.0,
+  'total_mobile_number' => 0,
 ];
 
 function fnum($v) {
@@ -40,43 +44,58 @@ if ($from !== '' && $to !== '') {
     if (!isset($CYBER_TABLES[$thanaKey])) continue;
     $table = $CYBER_TABLES[$thanaKey];
 
-    // One thana table => one aggregated row
+    // Refund Amount is derived from court_order (since refund_amount column doesn't exist)
     $sql = "SELECT
               COUNT(*) AS total_complaints,
+              COALESCE(COUNT(acknowledgement_number), 0) AS total_acknowledgement,
               COALESCE(SUM(total_fraud), 0) AS total_fraud,
-              COALESCE(SUM(hold_amount), 0) AS total_hold
+              COALESCE(SUM(hold_amount), 0) AS total_hold,
+              COALESCE(SUM(court_order), 0) AS total_refund_amount,
+              COALESCE(SUM(digital_arrest), 0) AS total_digital_arrest,
+              COALESCE(SUM(digital_amount), 0) AS total_digital_amount,
+              COALESCE(COUNT(mobile_number), 0) AS total_mobile_number
             FROM {$table}
             WHERE complaint_date BETWEEN :from AND :to";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':from' => $from, ':to' => $to]);
-    $agg = $stmt->fetch();
+    $agg = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $totalComplaints = (int)($agg['total_complaints'] ?? 0);
-    $totalFraud = (float)($agg['total_fraud'] ?? 0);
-    $totalHold = (float)($agg['total_hold'] ?? 0);
+    $totalComplaints      = (int)($agg['total_complaints'] ?? 0);
+    $totalAcknowledgement = (int)($agg['total_acknowledgement'] ?? 0);
+    $totalFraud           = (float)($agg['total_fraud'] ?? 0);
+    $totalHold            = (float)($agg['total_hold'] ?? 0);
+    $totalRefund          = (float)($agg['total_refund_amount'] ?? 0);
+    $totalDigitalArrest   = (int)($agg['total_digital_arrest'] ?? 0);
+    $totalDigitalAmount   = (float)($agg['total_digital_amount'] ?? 0);
+    $totalMobileNumber    = (int)($agg['total_mobile_number'] ?? 0);
 
     // include only if this thana has any record in the range
     if ($totalComplaints > 0) {
-      $holdPercent = ($totalFraud > 0) ? round(($totalHold / $totalFraud) * 100, 2) : 0;
-
       $rows[] = [
         'thana_key' => $thanaKey,
         'thana' => cyber_thana_label($thanaKey),
         'total_complaints' => $totalComplaints,
+        'total_acknowledgement' => $totalAcknowledgement,
         'total_fraud' => $totalFraud,
         'total_hold' => $totalHold,
-        'hold_percent' => $holdPercent,
+        'total_refund_amount' => $totalRefund,
+        'total_digital_arrest' => $totalDigitalArrest,
+        'total_digital_amount' => $totalDigitalAmount,
+        'total_mobile_number' => $totalMobileNumber,
       ];
 
       $grand['total_complaints'] += $totalComplaints;
+      $grand['total_acknowledgement'] += $totalAcknowledgement;
       $grand['total_fraud'] += $totalFraud;
       $grand['total_hold'] += $totalHold;
+      $grand['total_refund_amount'] += $totalRefund;
+      $grand['total_digital_arrest'] += $totalDigitalArrest;
+      $grand['total_digital_amount'] += $totalDigitalAmount;
+      $grand['total_mobile_number'] += $totalMobileNumber;
     }
   }
 }
-
-$grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / $grand['total_fraud']) * 100, 2) : 0;
 ?>
 <!doctype html>
 <html>
@@ -98,7 +117,7 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Cyber Report (Thana-wise)</h3>
     <div class="no-print">
-      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/user<?= $acting_user ?>.php">Back</a>
+      <a class="btn btn-outline-secondary btn-sm" href="<?= BASE_PATH ?>/dashboards/user<?= (int)$acting_user ?>.php">Back</a>
       <?php if ($from && $to): ?>
         <button class="btn btn-dark btn-sm" onclick="window.print()">Print</button>
       <?php endif; ?>
@@ -106,7 +125,7 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
   </div>
 
   <form class="row g-2 mb-3 no-print" method="get">
-    <input type="hidden" name="as_user" value="<?= $acting_user ?>">
+    <input type="hidden" name="as_user" value="<?= (int)$acting_user ?>">
     <div class="col-md-3">
       <label class="form-label">From</label>
       <input type="date" class="form-control" name="from" value="<?= htmlspecialchars($from) ?>" required>
@@ -131,17 +150,21 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
           <th>S.No.</th>
           <th>Thana</th>
           <th>Total Complaint</th>
+          <th>Total acknowledgment</th>
           <th>Total Fraud Amount</th>
           <th>Total Hold Amount</th>
-          <th>Hold % (Hold/Fraud)</th>
+          <th>Total Refund Amount</th>
+          <th>Total Digital Arrest</th>
+          <th>Total Digital Amount</th>
+          <th>Total Mobile number</th>
         </tr>
       </thead>
       <tbody>
       <?php if (!$from || !$to): ?>
-        <tr><td colspan="6" class="text-center">Select From and To date, then click Generate.</td></tr>
+        <tr><td colspan="10" class="text-center">Select From and To date, then click Generate.</td></tr>
 
       <?php elseif (!$rows): ?>
-        <tr><td colspan="6" class="text-center">No data found for this date range.</td></tr>
+        <tr><td colspan="10" class="text-center">No data found for this date range.</td></tr>
 
       <?php else: ?>
         <?php foreach ($rows as $i => $r): ?>
@@ -149,18 +172,26 @@ $grandHoldPercent = ($grand['total_fraud'] > 0) ? round(($grand['total_hold'] / 
             <td><?= $i + 1 ?></td>
             <td><?= htmlspecialchars($r['thana']) ?></td>
             <td><?= (int)$r['total_complaints'] ?></td>
+            <td><?= (int)$r['total_acknowledgement'] ?></td>
             <td><?= fnum($r['total_fraud']) ?></td>
             <td><?= fnum($r['total_hold']) ?></td>
-            <td><?= fnum($r['hold_percent']) ?>%</td>
+            <td><?= fnum($r['total_refund_amount']) ?></td>
+            <td><?= (int)$r['total_digital_arrest'] ?></td>
+            <td><?= fnum($r['total_digital_amount']) ?></td>
+            <td><?= (int)$r['total_mobile_number'] ?></td>
           </tr>
         <?php endforeach; ?>
 
         <tr class="table-warning fw-bold">
           <td colspan="2">Grand Total</td>
           <td><?= (int)$grand['total_complaints'] ?></td>
+          <td><?= (int)$grand['total_acknowledgement'] ?></td>
           <td><?= fnum($grand['total_fraud']) ?></td>
           <td><?= fnum($grand['total_hold']) ?></td>
-          <td><?= fnum($grandHoldPercent) ?>%</td>
+          <td><?= fnum($grand['total_refund_amount']) ?></td>
+          <td><?= (int)$grand['total_digital_arrest'] ?></td>
+          <td><?= fnum($grand['total_digital_amount']) ?></td>
+          <td><?= (int)$grand['total_mobile_number'] ?></td>
         </tr>
       <?php endif; ?>
       </tbody>

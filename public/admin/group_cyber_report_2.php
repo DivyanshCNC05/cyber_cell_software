@@ -22,23 +22,26 @@ $GROUPS = [
 ];
 
 $report = [];
-$grand = ['complaints'=>0, 'fraud'=>0.0, 'hold'=>0.0];
+$grand  = ['complaints'=>0, 'fraud'=>0.0, 'refund'=>0.0];
 
 if ($from && $to) {
   foreach ($GROUPS as $groupName => $thanaKeys) {
 
     $totComplaints = 0;
-    $totFraud = 0.0;
-    $totHold = 0.0;
+    $totFraud      = 0.0;
+    $totRefund     = 0.0;
 
     foreach ($thanaKeys as $key) {
       if (!isset($CYBER_TABLES[$key])) continue; // safety whitelist
       $table = $CYBER_TABLES[$key];
 
+      // Refund = SUM(courtorder) + SUM(cybercell) (your DB schema uses these columns) [file:1]
+      // Fraud = SUM(totalfraud), Date = complaintdate (as per dump) [file:1]
       $sql = "SELECT
                 COUNT(*) AS c,
                 COALESCE(SUM(total_fraud), 0) AS tf,
-                COALESCE(SUM(hold_amount), 0) AS th
+                COALESCE(SUM(court_order), 0) AS tco,
+                COALESCE(SUM(cyber_cell), 0) AS tcc
               FROM {$table}
               WHERE complaint_date BETWEEN :from AND :to";
 
@@ -48,34 +51,36 @@ if ($from && $to) {
 
       $totComplaints += (int)($a['c'] ?? 0);
       $totFraud      += (float)($a['tf'] ?? 0);
-      $totHold       += (float)($a['th'] ?? 0);
+      $totRefund     += (float)($a['tco'] ?? 0) + (float)($a['tcc'] ?? 0);
     }
 
-    // Skip empty group rows (optional). Remove this if you want to show 0 rows too.
+    // Optional: skip empty group rows
     if ($totComplaints <= 0) continue;
 
-    $holdPct = ($totFraud > 0) ? round(($totHold / $totFraud) * 100, 2) : 0;
+    // "Hold %" column is actually Refund % now: (Total Refund / Total Fraud) * 100
+    $holdPct = ($totFraud > 0) ? round(($totRefund / $totFraud) * 100, 2) : 0;
 
     $report[] = [
       'group' => $groupName,
       'complaints' => $totComplaints,
       'fraud' => $totFraud,
-      'hold' => $totHold,
+      'refund' => $totRefund,
       'hold_pct' => $holdPct,
     ];
 
     $grand['complaints'] += $totComplaints;
-    $grand['fraud'] += $totFraud;
-    $grand['hold'] += $totHold;
+    $grand['fraud']      += $totFraud;
+    $grand['refund']     += $totRefund;
   }
 
-  // Optional: sort groups by Hold % descending (remove if not needed)
+  // Optional: sort groups by % descending
   usort($report, function ($a, $b) {
     return $b['hold_pct'] <=> $a['hold_pct'];
   });
 }
 
-$grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud']) * 100, 2) : 0;
+// Grand Total % = (grand_refund / grand_fraud) * 100
+$grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['refund'] / $grand['fraud']) * 100, 2) : 0;
 ?>
 <!doctype html>
 <html>
@@ -121,7 +126,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <th>Thana Group</th>
           <th>Total Complaints</th>
           <th>Total Fraud</th>
-          <th>Total Hold</th>
+          <th>Total Refund</th>
           <th>Hold %</th>
         </tr>
       </thead>
@@ -139,7 +144,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
             <td><?= htmlspecialchars($r['group']) ?></td>
             <td><?= (int)$r['complaints'] ?></td>
             <td><?= f2($r['fraud']) ?></td>
-            <td><?= f2($r['hold']) ?></td>
+            <td><?= f2($r['refund']) ?></td>
             <td><?= f2($r['hold_pct']) ?>%</td>
           </tr>
         <?php endforeach; ?>
@@ -148,7 +153,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['hold'] / $grand['fraud'])
           <td colspan="2">Grand Total</td>
           <td><?= (int)$grand['complaints'] ?></td>
           <td><?= f2($grand['fraud']) ?></td>
-          <td><?= f2($grand['hold']) ?></td>
+          <td><?= f2($grand['refund']) ?></td>
           <td><?= f2($grandHoldPct) ?>%</td>
         </tr>
       <?php endif; ?>

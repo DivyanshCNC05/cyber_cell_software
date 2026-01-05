@@ -30,8 +30,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-primary me-3">1</div>
           <div>
-            <h5 class="card-title mb-1">User-1 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Manage User 1 Dashboard</p>
+            <h5 class="card-title mb-1">Gitika's Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage Gitika Dashboard</p>
           </div>
         </div>
       </div>
@@ -44,8 +44,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-info me-3">2</div>
           <div>
-            <h5 class="card-title mb-1">User-2 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Manage User 2 Dashboard</p>
+            <h5 class="card-title mb-1">Arti's Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage Arti's Dashboard</p>
           </div>
         </div>
       </div>
@@ -58,8 +58,8 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-success me-3">3</div>
           <div>
-            <h5 class="card-title mb-1">User-3 Dashboard</h5>
-            <p class="card-text small text-muted mb-0">Manage User 3 Dashboard</p>
+            <h5 class="card-title mb-1">Nisha's Dashboard</h5>
+            <p class="card-text small text-muted mb-0">Manage Nisha's Dashboard</p>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ require __DIR__ . '/../../templates/header.php';
     </a>
   </div>
 
-  <div class="col-sm-6 col-md-4">
+  <!-- <div class="col-sm-6 col-md-4">
     <a class="text-decoration-none" href="#">
       <div class="card h-100 admin-card card-hover">
         <div class="card-body d-flex align-items-start">
@@ -92,7 +92,7 @@ require __DIR__ . '/../../templates/header.php';
         </div>
       </div>
     </a>
-  </div>
+  </div> -->
 
   <!-- New admin cards -->
   <div class="col-sm-6 col-md-4">
@@ -116,7 +116,49 @@ require __DIR__ . '/../../templates/header.php';
           <div class="card-icon bg-primary me-3">📊</div>
           <div>
             <h5 class="card-title mb-1">Cyber Report (All Thana)</h5>
-            <p class="card-text small text-muted mb-0">Admin view</p>
+            <p class="card-text small text-muted mb-0">Hold Table</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/cyber_report_2.php">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-primary me-3">📊</div>
+          <div>
+            <h5 class="card-title mb-1">Cyber Report (All Thana)</h5>
+            <p class="card-text small text-muted mb-0">Refund Table</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/group_cyber_report.php">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-success me-3">💻</div>
+          <div>
+            <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
+            <p class="card-text small text-muted mb-0">Hold Table</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/group_cyber_report_2.php">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-success me-3">💻</div>
+          <div>
+            <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
+            <p class="card-text small text-muted mb-0">Refund Table</p>
           </div>
         </div>
       </div>
@@ -130,20 +172,6 @@ require __DIR__ . '/../../templates/header.php';
           <div class="card-icon bg-info me-3">🗂️</div>
           <div>
             <h5 class="card-title mb-1">CEIR Report (All Thana)</h5>
-            <p class="card-text small text-muted mb-0">Admin view</p>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>
-
-  <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/group_cyber_report.php">
-      <div class="card h-100 admin-card card-hover">
-        <div class="card-body d-flex align-items-start">
-          <div class="card-icon bg-success me-3">G</div>
-          <div>
-            <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
             <p class="card-text small text-muted mb-0">Admin view</p>
           </div>
         </div>

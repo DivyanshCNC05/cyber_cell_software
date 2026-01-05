@@ -2,6 +2,8 @@
 require __DIR__ . '/../../includes/db.php';
 require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/thanas.php';
+require __DIR__ . '/../../templates/header.php';
+
 
 // If ADMIN is acting as another user, allow access and set $acting_user, otherwise require CYBER_USER
 if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
