@@ -8,7 +8,7 @@ require __DIR__ . '/../../templates/header.php';
 echo '<!-- DEBUG: user3_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
 ?> 
 
-<h3 class="mb-3">User-3 Dashboard</h3>
+<h3 class="mb-3">Nisha's Dashboard</h3>
 
 <div class="row g-3">
   <div class="col-md-6">

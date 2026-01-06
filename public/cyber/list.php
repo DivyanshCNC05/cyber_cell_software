@@ -73,7 +73,7 @@ $sql = "SELECT
           mobile_number
         FROM {$table}
         {$whereSql}
-        ORDER BY sno DESC
+        ORDER BY sno
         LIMIT 200";
 
 $stmt = $pdo->prepare($sql);
