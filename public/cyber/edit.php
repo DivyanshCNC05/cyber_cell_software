@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ':applicant_name'          => p('applicant_name'),
     ':acknowledgement_number'  => p('acknowledgement_number'),
     ':nature_of_fraud'         => p('nature_of_fraud'),
+    ':applicant_address'       => p('applicant_address'),
     ':incident_date'           => p('incident_date') ?: null,
     ':complaint_date'          => p('complaint_date'),
 
@@ -87,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               block_or_unblock        = :block_or_unblock,
               digital_arrest          = :digital_arrest,
               digital_amount          = :digital_amount,
-              mobile_number           = :mobile_number
+              mobile_number           = :mobile_number,
+              applicant_address       = :applicant_address
             WHERE sno = :sno
             LIMIT 1";
 
@@ -122,6 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     'digital_arrest'          => $_POST['digital_arrest'] ?? '',
     'digital_amount'          => $_POST['digital_amount'] ?? '',
     'mobile_number'           => $_POST['mobile_number'] ?? '',
+    'applicant_address'       => $_POST['applicant_address'] ?? '',
   ]);
 }
 ?>
@@ -151,13 +154,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     <input type="hidden" name="as_user" value="<?= htmlspecialchars((string)$acting_user) ?>">
 
     <div class="col-md-4">
-      <label class="form-label">Complaint Number</label>
-      <input class="form-control" name="complaint_number" value="<?= htmlspecialchars($row['complaint_number'] ?? '') ?>">
+      <label class="form-label">Applicant Name *</label>
+      <input class="form-control" name="applicant_name" required value="<?= htmlspecialchars($row['applicant_name'] ?? '') ?>">
     </div>
 
     <div class="col-md-8">
-      <label class="form-label">Applicant Name *</label>
-      <input class="form-control" name="applicant_name" required value="<?= htmlspecialchars($row['applicant_name'] ?? '') ?>">
+      <label class="form-label">Applicant Address</label>
+      <input class="form-control" name="applicant_address" value="<?= htmlspecialchars($row['applicant_address'] ?? '') ?>">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Applicant Mobile Number</label>
+      <input class="form-control" name="mobile_number" value="<?= htmlspecialchars($row['mobile_number'] ?? '') ?>">
     </div>
 
     <div class="col-md-4">
@@ -165,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
       <input class="form-control" name="acknowledgement_number" value="<?= htmlspecialchars($row['acknowledgement_number'] ?? '') ?>">
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-4">
       <label class="form-label">Nature of Fraud</label>
       <input class="form-control" name="nature_of_fraud" value="<?= htmlspecialchars($row['nature_of_fraud'] ?? '') ?>">
     </div>
@@ -231,11 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     <div class="col-md-3">
       <label class="form-label">Digital Amount</label>
       <input type="number" step="0.01" class="form-control" name="digital_amount" value="<?= htmlspecialchars($row['digital_amount'] ?? '') ?>">
-    </div>
-
-    <div class="col-md-3">
-      <label class="form-label">Mobile Number</label>
-      <input class="form-control" name="mobile_number" value="<?= htmlspecialchars($row['mobile_number'] ?? '') ?>">
     </div>
 
     <div class="col-12">

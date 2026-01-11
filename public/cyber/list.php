@@ -4,7 +4,6 @@ require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../includes/thanas.php';
 require __DIR__ . '/../../templates/header.php';
 
-
 // Allow ADMIN to act as a specific user when as_user is provided
 if (($_SESSION['role'] ?? '') === 'ADMIN' && isset($_REQUEST['as_user'])) {
   $acting_user = (int)($_REQUEST['as_user']);
@@ -36,6 +35,12 @@ $to   = $_GET['to'] ?? '';
 // NEW: ack search
 $ack = trim($_GET['ack'] ?? '');
 
+// Function to format date dd-mm-yyyy
+function formatDate($date) {
+  if (empty($date) || $date === '0000-00-00') return '';
+  return date('d-m-Y', strtotime($date));
+}
+
 // Build query
 $where  = [];
 $params = [];
@@ -46,7 +51,7 @@ if ($to !== '')   { $where[] = "complaint_date <= :to";   $params[':to']   = $to
 // NEW: search by acknowledgement number (partial match)
 if ($ack !== '') {
   $where[] = "acknowledgement_number LIKE :ack";
-  $params[':ack'] = '%' . $ack . '%'; // wildcard binding [web:84][web:96]
+  $params[':ack'] = '%' . $ack . '%';
 }
 
 $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
@@ -70,7 +75,8 @@ $sql = "SELECT
           block_or_unblock,
           digital_arrest,
           digital_amount,
-          mobile_number
+          mobile_number,
+          applicant_address
         FROM {$table}
         {$whereSql}
         ORDER BY sno
@@ -80,17 +86,8 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cyber Complaints List</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-<div class="container py-4">
 
+<div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Cyber Complaints - <?= htmlspecialchars(cyber_thana_label($thana)) ?></h3>
     <div>
@@ -140,23 +137,23 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <thead class="table-dark">
         <tr>
           <th>S.No</th>
-          <th>Complaint No</th>
-          <th>Applicant</th>
-          <th>Ack No</th>
-          <th>Nature</th>
-          <th>Incident</th>
-          <th>Complaint</th>
-          <th>Total</th>
+          <th>Applicant Name</th>
+          <th>Acknowledgement Number</th>
+          <th>Applicant Mobile Number</th>
+          <th>Applicant Address</th>
+          <th>Nature Of Fraud</th>
+          <th>Incident Date</th>
+          <th>Complaint Date</th>
+          <th>Total Fraud</th>
           <th>Hold Date</th>
-          <th>Hold Amt</th>
-          <th>Court</th>
+          <th>Hold Amount</th>
+          <th>Court Order</th>
           <th>Cyber Cell</th>
-          <th>Fraud Mobile</th>
-          <th>Fraud IMEI</th>
-          <th>Block</th>
+          <th>Fraud Mobile Number</th>
+          <th>Fraud IMEI Number</th>
+          <th>Block/Unblock</th>
           <th>Digital Arrest</th>
-          <th>Digital Amt</th>
-          <th>Mobile No</th>
+          <th>Digital Amount</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -167,14 +164,15 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($rows as $r): ?>
           <tr>
             <td><?= (int)$r['sno'] ?></td>
-            <td><?= htmlspecialchars($r['complaint_number'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['applicant_name'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['acknowledgement_number'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['mobile_number'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['applicant_address'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['nature_of_fraud'] ?? '') ?></td>
-            <td><?= htmlspecialchars($r['incident_date'] ?? '') ?></td>
-            <td><?= htmlspecialchars($r['complaint_date'] ?? '') ?></td>
+            <td><?= formatDate($r['incident_date']) ?></td>
+            <td><?= formatDate($r['complaint_date']) ?></td>
             <td><?= htmlspecialchars($r['total_fraud'] ?? '') ?></td>
-            <td><?= htmlspecialchars($r['hold_date'] ?? '') ?></td>
+            <td><?= formatDate($r['hold_date']) ?></td>
             <td><?= htmlspecialchars($r['hold_amount'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['court_order'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['cyber_cell'] ?? '') ?></td>
@@ -183,7 +181,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($r['block_or_unblock'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['digital_arrest'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['digital_amount'] ?? '') ?></td>
-            <td><?= htmlspecialchars($r['mobile_number'] ?? '') ?></td>
             <td>
               <a class="btn btn-sm btn-warning"
                  href="<?= BASE_PATH ?>/cyber/edit.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>&as_user=<?= (int)$acting_user ?>">Edit</a>
@@ -199,7 +196,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <p class="text-muted small mb-0">Showing latest 200 records (sorted by S.No descending).</p>
-
 </div>
-</body>
-</html>
+
+<?php require __DIR__ . '/../../templates/footer.php'; ?>

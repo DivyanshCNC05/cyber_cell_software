@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ':digital_arrest'         => p('digital_arrest') !== '' ? (int)p('digital_arrest') : 0,
       ':digital_amount'         => p('digital_amount') !== '' ? p('digital_amount') : 0,
       ':mobile_number'          => p('mobile_number'),
+      ':applicant_address'      => p('applicant_address'),
       ':created_by'             => (int)($_SESSION['user_id'] ?? 0),
     ];
 
@@ -75,13 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          incident_date, complaint_date, total_fraud, hold_date, hold_amount,
          court_order, cyber_cell,
          fraud_mobile_number, fraud_imei_number, block_or_unblock,
-         digital_arrest, digital_amount, mobile_number, created_by)
+         digital_arrest, digital_amount, mobile_number, created_by, applicant_address)
         VALUES
         (:complaint_number, :applicant_name, :acknowledgement_number, :nature_of_fraud,
          :incident_date, :complaint_date, :total_fraud, :hold_date, :hold_amount,
          :court_order, :cyber_cell,
          :fraud_mobile_number, :fraud_imei_number, :block_or_unblock,
-         :digital_arrest, :digital_amount, :mobile_number, :created_by)";
+         :digital_arrest, :digital_amount, :mobile_number, :created_by, :applicant_address)";
 
       $stmt = $pdo->prepare($sql);
       $stmt->execute([':complaint_number' => $complaintNo] + $data);
@@ -150,13 +151,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  value="<?= htmlspecialchars($_POST['acknowledgement_number'] ?? '') ?>">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="form-label">Applicant Name *</label>
           <input class="form-control" name="applicant_name" required
                  value="<?= htmlspecialchars($_POST['applicant_name'] ?? '') ?>">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <label class="form-label">Applicant Mobile Number</label>
+          <input class="form-control" name="mobile_number"
+                 value="<?= htmlspecialchars($_POST['mobile_number'] ?? '') ?>">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Applicant Address</label>
+          <input class="form-control" name="applicant_address"
+                 value="<?= htmlspecialchars($_POST['applicant_address'] ?? '') ?>">
+        </div>
+
+        <div class="col-md-4">
           <label class="form-label">Nature of Fraud</label>
           <input class="form-control" name="nature_of_fraud"
                  value="<?= htmlspecialchars($_POST['nature_of_fraud'] ?? '') ?>">
@@ -215,11 +228,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="col-md-3">
-          <label class="form-label">Block / Unblock</label>
-          <select name="block_or_unblock" class="form-select">
-            <option value="UNBLOCK">UNBLOCK</option>
-            <option value="BLOCK" <?= (($_POST['block_or_unblock'] ?? '') === 'BLOCK') ? 'selected' : '' ?>>BLOCK</option>
-          </select>
+          <label class="form-label">Digital Arrest</label>
+          <input type="number" class="form-control" name="digital_arrest"
+                 value="<?= htmlspecialchars($_POST['digital_arrest'] ?? '') ?>">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Digital Amount</label>
+          <input type="number" step="0.01" class="form-control" name="digital_amount"
+                 value="<?= htmlspecialchars($_POST['digital_amount'] ?? '') ?>">
         </div>
 
         <!-- Device -->
@@ -240,22 +257,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="col-md-3">
-          <label class="form-label">Digital Arrest</label>
-          <input type="number" class="form-control" name="digital_arrest"
-                 value="<?= htmlspecialchars($_POST['digital_arrest'] ?? '') ?>">
+          <label class="form-label">Block / Unblock</label>
+          <select name="block_or_unblock" class="form-select">
+            <option value="UNBLOCK">UNBLOCK</option>
+            <option value="BLOCK" <?= (($_POST['block_or_unblock'] ?? '') === 'BLOCK') ? 'selected' : '' ?>>BLOCK</option>
+          </select>
         </div>
 
-        <div class="col-md-3">
-          <label class="form-label">Digital Amount</label>
-          <input type="number" step="0.01" class="form-control" name="digital_amount"
-                 value="<?= htmlspecialchars($_POST['digital_amount'] ?? '') ?>">
-        </div>
-
-        <div class="col-md-3">
-          <label class="form-label">Mobile Number</label>
-          <input class="form-control" name="mobile_number"
-                 value="<?= htmlspecialchars($_POST['mobile_number'] ?? '') ?>">
-        </div>
+        
 
         <!-- Actions -->
         <div class="col-12 mt-3 d-flex gap-2">

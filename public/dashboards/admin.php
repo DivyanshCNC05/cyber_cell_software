@@ -15,7 +15,7 @@ require __DIR__ . '/../../templates/header.php';
     </div>
     <div class="mt-3 mt-md-0">
       <a class="btn btn-outline-light btn-sm me-2" href="<?= BASE_PATH ?>/admin/users.php">User Management</a>
-      <a class="btn btn-light btn-sm" href="<?= BASE_PATH ?>/admin/cyber_report.php">Generate Reports</a>
+      <a class="btn btn-light btn-sm" href="<?= BASE_PATH ?>/admin/links_management.php">Links Management</a>
     </div>
   </div>
 </div>
@@ -67,49 +67,6 @@ require __DIR__ . '/../../templates/header.php';
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="./ceir.php">
-      <div class="card h-100 admin-card card-hover">
-        <div class="card-body d-flex align-items-start">
-          <div class="card-icon bg-warning me-3">C</div>
-          <div>
-            <h5 class="card-title mb-1">CEIR Dashboard</h5>
-            <p class="card-text small text-muted mb-0">CEIR data and operations</p>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>
-
-  <!-- <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="#">
-      <div class="card h-100 admin-card card-hover">
-        <div class="card-body d-flex align-items-start">
-          <div class="card-icon bg-dark me-3">R</div>
-          <div>
-            <h5 class="card-title mb-1">Generate Report</h5>
-            <p class="card-text small text-muted mb-0">Comming soon</p>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div> -->
-
-  <!-- New admin cards -->
-  <div class="col-sm-6 col-md-4">
-    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/users.php">
-      <div class="card h-100 admin-card card-hover">
-        <div class="card-body d-flex align-items-start">
-          <div class="card-icon bg-secondary me-3">U</div>
-          <div>
-            <h5 class="card-title mb-1">User Management</h5>
-            <p class="card-text small text-muted mb-0">Manage users and their permissions</p>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>
-
-  <div class="col-sm-6 col-md-4">
     <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/cyber_report.php">
       <div class="card h-100 admin-card card-hover">
         <div class="card-body d-flex align-items-start">
@@ -143,7 +100,7 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-success me-3">💻</div>
           <div>
-            <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
+            <h5 class="card-title mb-1">Cyber Zone-wise Report</h5>
             <p class="card-text small text-muted mb-0">Hold Table</p>
           </div>
         </div>
@@ -157,13 +114,56 @@ require __DIR__ . '/../../templates/header.php';
         <div class="card-body d-flex align-items-start">
           <div class="card-icon bg-success me-3">💻</div>
           <div>
-            <h5 class="card-title mb-1">Cyber Group-wise Report</h5>
+            <h5 class="card-title mb-1">Cyber Zone-wise Report</h5>
             <p class="card-text small text-muted mb-0">Refund Table</p>
           </div>
         </div>
       </div>
     </a>
   </div>
+
+  <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="./ceir.php">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-warning me-3">C</div>
+          <div>
+            <h5 class="card-title mb-1">CEIR Dashboard</h5>
+            <p class="card-text small text-muted mb-0">CEIR data and operations</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="#">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-dark me-3">R</div>
+          <div>
+            <h5 class="card-title mb-1">Generate Report</h5>
+            <p class="card-text small text-muted mb-0">Comming soon</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div> -->
+
+  <!-- New admin cards -->
+  <!-- <div class="col-sm-6 col-md-4">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/users.php">
+      <div class="card h-100 admin-card card-hover">
+        <div class="card-body d-flex align-items-start">
+          <div class="card-icon bg-secondary me-3">U</div>
+          <div>
+            <h5 class="card-title mb-1">User Management</h5>
+            <p class="card-text small text-muted mb-0">Manage users and their permissions</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div> -->
 
   <div class="col-sm-6 col-md-4">
     <a class="text-decoration-none" href="<?= BASE_PATH ?>/admin/ceir_report.php">

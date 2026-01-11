@@ -44,13 +44,13 @@ if ($from !== '' && $to !== '') {
     if (!isset($CYBER_TABLES[$thanaKey])) continue;
     $table = $CYBER_TABLES[$thanaKey];
 
-    // Refund Amount is derived from court_order (since refund_amount column doesn't exist)
+    // Fixed SQL: Total Refund Amount = courtorder + cybercell
     $sql = "SELECT
               COUNT(*) AS total_complaints,
               COALESCE(COUNT(acknowledgement_number), 0) AS total_acknowledgement,
               COALESCE(SUM(total_fraud), 0) AS total_fraud,
               COALESCE(SUM(hold_amount), 0) AS total_hold,
-              COALESCE(SUM(court_order), 0) AS total_refund_amount,
+              (COALESCE(SUM(court_order), 0) + COALESCE(SUM(cyber_cell), 0)) AS total_refund_amount,
               COALESCE(SUM(digital_arrest), 0) AS total_digital_arrest,
               COALESCE(SUM(digital_amount), 0) AS total_digital_amount,
               COALESCE(COUNT(mobile_number), 0) AS total_mobile_number

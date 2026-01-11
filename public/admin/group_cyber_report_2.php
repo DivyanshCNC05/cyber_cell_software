@@ -127,7 +127,7 @@ $grandHoldPct = ($grand['fraud'] > 0) ? round(($grand['refund'] / $grand['fraud'
           <th>Total Complaints</th>
           <th>Total Fraud</th>
           <th>Total Refund</th>
-          <th>Hold %</th>
+          <th>Refund %</th>
         </tr>
       </thead>
       <tbody>

@@ -8,7 +8,7 @@ require __DIR__ . '/../../templates/header.php';
 echo '<!-- DEBUG: user2_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
 ?> 
 
-<h3 class="mb-3">Arti's Dashboard</h3>
+<h3 class="mb-3 mt-5">Arti's Dashboard</h3>
 
 <div class="row g-3">
   <div class="col-md-6">
@@ -46,5 +46,15 @@ echo '<!-- DEBUG: user2_requested: ' . ($_SERVER['REQUEST_URI'] ?? '') . ' -->';
       </div></div>
     </a>
   </div>
+
+  <div class="col-md-6">
+    <a class="text-decoration-none" href="<?= BASE_PATH ?>/dashboards/links.php?as_user=1">
+      <div class="card h-100"><div class="card-body">
+        <h5 class="card-title">Important Links</h5>
+        <p class="card-text"></p>
+      </div></div>
+    </a>
+  </div>
+  
 </div>
 
