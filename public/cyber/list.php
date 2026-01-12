@@ -147,8 +147,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <th>Total Fraud</th>
           <th>Hold Date</th>
           <th>Hold Amount</th>
-          <th>Court Order</th>
           <th>Cyber Cell</th>
+          <th>Court Order</th>
           <th>Fraud Mobile Number</th>
           <th>Fraud IMEI Number</th>
           <th>Block/Unblock</th>
@@ -174,8 +174,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($r['total_fraud'] ?? '') ?></td>
             <td><?= formatDate($r['hold_date']) ?></td>
             <td><?= htmlspecialchars($r['hold_amount'] ?? '') ?></td>
-            <td><?= htmlspecialchars($r['court_order'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['cyber_cell'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['court_order'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['fraud_mobile_number'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['fraud_imei_number'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['block_or_unblock'] ?? '') ?></td>

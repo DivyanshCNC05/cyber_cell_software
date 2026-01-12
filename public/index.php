@@ -74,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
             background:url('./assets/image/cyber_cell_flex.jpg');
             background-size: cover;
-            background-position: center;
+            background-repeat: no-repeat;
+            /* background-position: center; */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
             overflow-x: hidden;
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('./assets/image/cyber_cell_flex.jpg') center/cover no-repeat;
+            /* background: url('./assets/image/cyber_cell_flex.jpg') center/cover no-repeat; */
             z-index: -2;
             filter: blur(1px) brightness(0.6);
         }
@@ -122,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #0a1431, #1e3a8a, #0a1431);
+            /* background: linear-gradient(90deg, #0a1431, #1e3a8a, #0a1431); */
             border-radius: 24px 24px 0 0;
         }
 
@@ -333,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="post" novalidate>
                 <div class="form-floating">
                     <input class="form-control" type="email" name="email" id="email" placeholder="name@example.com" required autofocus>
-                    <label for="email">Email Address</label>
+                    <label for="email">Username</label>
                 </div>
                 
                 <div class="form-floating">

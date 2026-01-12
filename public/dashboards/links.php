@@ -2,7 +2,6 @@
 require __DIR__ . '/../../includes/db.php';
 require __DIR__ . '/../../includes/auth.php';
 require __DIR__ . '/../../templates/header.php';
-require_role('CYBER_USER');
 ?>
 
 <div class="container py-4">
