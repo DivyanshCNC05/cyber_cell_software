@@ -125,6 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     'digital_amount'          => $_POST['digital_amount'] ?? '',
     'mobile_number'           => $_POST['mobile_number'] ?? '',
     'applicant_address'       => $_POST['applicant_address'] ?? '',
+    'dial112'                 => $_POST['dial112'] ?? '',
+    'remark'                  => $_POST['remark'] ?? '',
+    'efir_number'             => $_POST['efir_number'] ?? '',
+    'efir_link'               => $_POST['efir_link'] ?? '',
   ]);
 }
 ?>
@@ -171,6 +175,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     <div class="col-md-4">
       <label class="form-label">Acknowledgement Number</label>
       <input class="form-control" name="acknowledgement_number" value="<?= htmlspecialchars($row['acknowledgement_number'] ?? '') ?>">
+    </div>
+    
+    <div class="col-md-4">
+      <label class="form-label">Remark</label>
+      <input class="form-control" name="remark" value="<?= htmlspecialchars($row['remark'] ?? '') ?>">
+    </div>
+    
+    <div class="col-md-4">
+      <label class="form-label">Dial112</label>
+      <input class="form-control" name="dial112" value="<?= htmlspecialchars($row['dial112'] ?? '') ?>">
     </div>
 
     <div class="col-md-4">
@@ -221,6 +235,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error) {
     <div class="col-md-3">
       <label class="form-label">Fraud IMEI</label>
       <input class="form-control" name="fraud_imei_number" value="<?= htmlspecialchars($row['fraud_imei_number'] ?? '') ?>">
+    </div>
+    
+    <div class="col-md-3">
+      <label class="form-label">E-FIR Number</label>
+      <input class="form-control" name="efir_number" value="<?= htmlspecialchars($row['efir_number'] ?? '') ?>">
+    </div>
+    
+    <div class="col-md-3">
+      <label class="form-label">E-FIR Link</label>
+      <input class="form-control" name="efir_link" value="<?= htmlspecialchars($row['efir_link'] ?? '') ?>">
     </div>
 
     <div class="col-md-3">

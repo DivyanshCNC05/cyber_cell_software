@@ -77,6 +77,10 @@ $sql = "SELECT
           digital_amount,
           mobile_number,
           applicant_address
+          dial112,
+          remark,
+          efir_number,
+          efir_link
         FROM {$table}
         {$whereSql}
         ORDER BY sno
@@ -141,6 +145,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <th>Acknowledgement Number</th>
           <th>Applicant Mobile Number</th>
           <th>Applicant Address</th>
+          <th>Remark</th>
+          <th>Dial112</th>
           <th>Nature Of Fraud</th>
           <th>Incident Date</th>
           <th>Complaint Date</th>
@@ -154,6 +160,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <th>Block/Unblock</th>
           <th>Digital Arrest</th>
           <th>Digital Amount</th>
+          <th>E-FIR Number</th>
+          <th>E-FIR Link</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -168,6 +176,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($r['acknowledgement_number'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['mobile_number'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['applicant_address'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['remark'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['dial112'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['nature_of_fraud'] ?? '') ?></td>
             <td><?= formatDate($r['incident_date']) ?></td>
             <td><?= formatDate($r['complaint_date']) ?></td>
@@ -181,6 +191,8 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?= htmlspecialchars($r['block_or_unblock'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['digital_arrest'] ?? '') ?></td>
             <td><?= htmlspecialchars($r['digital_amount'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['efir_number'] ?? '') ?></td>
+            <td><?= htmlspecialchars($r['efir_link'] ?? '') ?></td>
             <td>
               <a class="btn btn-sm btn-warning"
                  href="<?= BASE_PATH ?>/cyber/edit.php?thana=<?= urlencode($thana) ?>&sno=<?= (int)$r['sno'] ?>&as_user=<?= (int)$acting_user ?>">Edit</a>

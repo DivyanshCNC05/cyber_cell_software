@@ -103,7 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
+            margin-top: 25%;
+            background: rgba(255, 255, 255, 0.82);
             backdrop-filter: blur(20px);
             border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
@@ -292,6 +293,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         @media (max-width: 576px) {
+            body {
+                min-height: 100vh;
+            background:url('./assets/image/cyber_cell_flex_mobile.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            }
             .login-card {
                 margin: 1rem;
                 padding: 2rem 1.5rem;
@@ -317,9 +324,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <div class="login-card">
             <div class="logo-container">
-                <div class="logo">
+                <!-- <div class="logo">
                     <img src="./assets/image/cyber-logo.png" alt="Cyber Cell Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-shield-alt fa-2x text-white\'></i>'">
-                </div>
+                </div> -->
                 <h1 class="login-title">Cyber Cell Portal</h1>
                 <div class="login-subtitle">Secure Login Required</div>
             </div>

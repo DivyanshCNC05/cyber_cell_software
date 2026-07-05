@@ -51,6 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ':digital_amount'         => p('digital_amount') !== '' ? p('digital_amount') : 0,
       ':mobile_number'          => p('mobile_number'),
       ':applicant_address'      => p('applicant_address'),
+      ':dial112'                => p('dial112'),
+      ':remark'                 => p('remark'),
+      ':efir_number'            => p('efir_number'),
+      ':efir_link'              => p('efir'),
       ':created_by'             => (int)($_SESSION['user_id'] ?? 0),
     ];
 
@@ -76,13 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          incident_date, complaint_date, total_fraud, hold_date, hold_amount,
          court_order, cyber_cell,
          fraud_mobile_number, fraud_imei_number, block_or_unblock,
-         digital_arrest, digital_amount, mobile_number, created_by, applicant_address)
+         digital_arrest, digital_amount, mobile_number, created_by, applicant_address, dial112, remark, efir_number, efir_link)
         VALUES
         (:complaint_number, :applicant_name, :acknowledgement_number, :nature_of_fraud,
          :incident_date, :complaint_date, :total_fraud, :hold_date, :hold_amount,
          :court_order, :cyber_cell,
          :fraud_mobile_number, :fraud_imei_number, :block_or_unblock,
-         :digital_arrest, :digital_amount, :mobile_number, :created_by, :applicant_address)";
+         :digital_arrest, :digital_amount, :mobile_number, :created_by, :applicant_address, :dial112, :remark, :efir_number, :efir_link)";
 
       $stmt = $pdo->prepare($sql);
       $stmt->execute([':complaint_number' => $complaintNo] + $data);
@@ -125,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Complaint Details -->
         <div class="col-12">
-          <h6 class="text-primary fw-semibold border-bottom pb-2">Complaint Details</h6>
+          <h6 class="text-primary fw-semibold border-bottom pb-1 pt-3">Complaint Details</h6>
         </div>
 
         <div class="col-md-4">
@@ -168,6 +172,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input class="form-control" name="applicant_address"
                  value="<?= htmlspecialchars($_POST['applicant_address'] ?? '') ?>">
         </div>
+        
+        <div class="col-md-4">
+          <label class="form-label">Remark</label>
+          <input class="form-control" name="remark"
+                 value="<?= htmlspecialchars($_POST['remark'] ?? '') ?>">
+        </div>
+        
+        <div class="col-md-4">
+          <label class="form-label">Dial112</label>
+          <input class="form-control" name="dial112"
+                 value="<?= htmlspecialchars($_POST['dial112'] ?? '') ?>">
+        </div>
 
         <div class="col-md-4">
           <label class="form-label">Nature of Fraud</label>
@@ -177,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Dates & Amounts -->
         <div class="col-12 mt-3">
-          <h6 class="text-primary fw-semibold border-bottom pb-2">Dates & Financial</h6>
+          <h6 class="text-primary fw-semibold border-bottom pb-1 pt-3">Dates & Financial</h6>
         </div>
 
         <div class="col-md-3">
@@ -206,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Legal / Cyber -->
         <div class="col-12 mt-3">
-          <h6 class="text-primary fw-semibold border-bottom pb-2">Legal / Cyber Action</h6>
+          <h6 class="text-primary fw-semibold border-bottom pb-1 pt-3">Legal / Cyber Action</h6>
         </div>
 
         <div class="col-md-3">
@@ -238,10 +254,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="number" step="0.01" class="form-control" name="digital_amount"
                  value="<?= htmlspecialchars($_POST['digital_amount'] ?? '') ?>">
         </div>
+        
+        <div class="col-md-3">
+          <label class="form-label">E-FIR Number</label>
+          <input type="text" step="0.01" class="form-control" name="efir_number"
+                 value="<?= htmlspecialchars($_POST['efir_number'] ?? '') ?>">
+        </div>
+        
+        <div class="col-md-3">
+          <label class="form-label">E-FIR Link</label>
+          <input type="text" step="0.01" class="form-control" name="efir_link"
+                 value="<?= htmlspecialchars($_POST['efir_link'] ?? '') ?>">
+        </div>
 
         <!-- Device -->
         <div class="col-12 mt-3">
-          <h6 class="text-primary fw-semibold border-bottom pb-2">Device & Contact</h6>
+          <h6 class="text-primary fw-semibold border-bottom pb-1 pt-3">Device & Contact</h6>
         </div>
 
         <div class="col-md-3">
